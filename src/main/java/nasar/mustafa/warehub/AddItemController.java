@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 import static nasar.mustafa.warehub.ApplicationEntry.convertArabicNumerals;
 
-public class AddController {
+public class AddItemController {
     private Connection connection;
 
     public void setConnection(Connection connection){
