@@ -44,8 +44,13 @@
       <menus>
         <Menu mnemonicParsing="false" text="الأصناف">
           <items>
-            <MenuItem mnemonicParsing="false" text="إضافة صنف" />
-            <MenuItem mnemonicParsing="false" text="حركة صنف" />
+            <MenuItem mnemonicParsing="false" onAction="#AddItemButtonClick" text="إضافة صنف" />
+                  <Menu mnemonicParsing="false" text="حركة صنف">
+                    <items>
+                  <MenuItem mnemonicParsing="false" text="حركة بيع وشراء صنف" />
+                      <MenuItem mnemonicParsing="false" text="حركة أسعار صنف" />
+                    </items>
+                  </Menu>
             <MenuItem mnemonicParsing="false" text="تعديل صنف" />
             <MenuItem mnemonicParsing="false" text="حذف صنف" />
           </items>

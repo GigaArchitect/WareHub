@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.sql.Connection;
 
 public class LoggedController {
     @FXML
@@ -17,17 +18,27 @@ public class LoggedController {
         this.stage = stage;
     }
 
+    private Connection connection;
+
+    public void setConnection(Connection connection){
+        this.connection = connection;
+    }
+
     @FXML
     protected void onAboutClick(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("About.fxml"));
         Node aboutPane = loader.load();
-
         AboutController aboutController = loader.getController();
-
-
-
         contentPane.getChildren().setAll(aboutPane);
-
         aboutController.setMessage(stage.getWidth(), stage.getHeight());
+    }
+
+    @FXML
+    protected void AddItemButtonClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("AddItem.fxml"));
+        Node addPane = loader.load();
+        AddController addController = loader.getController();
+        addController.setConnection(connection);
+        contentPane.getChildren().setAll(addPane);
     }
 }

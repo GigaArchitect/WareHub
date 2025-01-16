@@ -1,21 +1,10 @@
--- 1. Categories Table
-CREATE TABLE IF NOT EXISTS categories (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(255) NOT NULL UNIQUE,
-    description TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME
-);
-
 -- 2. Items Table
 CREATE TABLE IF NOT EXISTS items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(255) NOT NULL,
-    category_id INTEGER,
+    name VARCHAR(255) NOT NULL UNIQUE,
     stock_quantity INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME,
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+    updated_at DATETIME
 );
 
 -- 3. Item Prices Table

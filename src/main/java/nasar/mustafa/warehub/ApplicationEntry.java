@@ -7,6 +7,9 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -17,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Connection;
 
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.ibatis.jdbc.ScriptRunner;
 
 
 public class ApplicationEntry extends Application {
@@ -30,29 +34,31 @@ public class ApplicationEntry extends Application {
         }
     }
 
+    public static String convertArabicNumerals(String input) {
+        return input.replace("٠", "0")
+                .replace("١", "1")
+                .replace("٢", "2")
+                .replace("٣", "3")
+                .replace("٤", "4")
+                .replace("٥", "5")
+                .replace("٦", "6")
+                .replace("٧", "7")
+                .replace("٨", "8")
+                .replace("٩", "9");
+    }
+
     public static void runSqlFile(Connection connection, String path) {
-        QueryRunner runner = new QueryRunner();
-        URL resourceUrl = ApplicationEntry.class.getResource(path);
-        Path resourcePath;
         try {
-            assert resourceUrl != null : " Resource Doesn't Exist !";
-            resourcePath = Paths.get(resourceUrl.toURI());
-        } catch (URISyntaxException e){
-            throw new RuntimeException(e);
-        }
+            ScriptRunner runner = new ScriptRunner(connection);
+            runner.setLogWriter(null);  // Disable console output
+            runner.setErrorLogWriter(null);  // Disable error console output
 
-        try {
-            String sql = new String(Files.readAllBytes(resourcePath));
-            String[] sqlStatements = sql.split(";");
-            for (String statement : sqlStatements) {
-                if (!statement.trim().isEmpty()) {
-                    runner.update(connection, statement.trim());
-                }
-            }
-        } catch (IOException | SQLException e) {
-            throw new RuntimeException("Error executing SQL: " + e.getMessage(), e);
+            InputStream is = ApplicationEntry.class.getResourceAsStream(path);
+            Reader reader = new InputStreamReader(is);
+            runner.runScript(reader);
+        } catch (Exception e) {
+            throw new RuntimeException("Error executing SQL file: " + path, e);
         }
-
     }
 
     @Override
@@ -64,6 +70,8 @@ public class ApplicationEntry extends Application {
         stage.setScene(scene);
         LoggedController loggedController = fxmlLoader.getController();
         loggedController.setStage(stage);
+        loggedController.setConnection(connection);
+
         Image icon = new Image(getClass().getResourceAsStream("WareHub.png"));
         stage.getIcons().add(icon);
         stage.show();
