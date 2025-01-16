@@ -37,7 +37,7 @@ public class LoggedController {
     protected void AddItemButtonClick(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("AddItem.fxml"));
         Node addPane = loader.load();
-        AddController addController = loader.getController();
+        AddItemController addController = loader.getController();
         addController.setConnection(connection);
         contentPane.getChildren().setAll(addPane);
     }
