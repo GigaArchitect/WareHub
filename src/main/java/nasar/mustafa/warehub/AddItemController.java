@@ -39,7 +39,8 @@ public class AddItemController {
             return;
         }
         if (ItemName.getText() == null || ItemName.getText().trim().isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "أسم الصنف فارغ أو غير صحيح", ButtonType.CANCEL);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "أسم الصنف فارغ أو غير صحيح",
+                    ButtonType.CANCEL);
             alert.showAndWait();
             return;
         }
@@ -58,7 +59,8 @@ public class AddItemController {
         }
         try {
             connection.setAutoCommit(false);
-            PreparedStatement command = connection.prepareStatement("INSERT INTO items(name, stock_quantity) VALUES(?, ?);");
+            PreparedStatement command = connection.prepareStatement("INSERT INTO items(name, stock_quantity) " +
+                    "VALUES(?, ?);");
             command.setString(1, ItemName.getText());
             command.setInt(2, Integer.parseInt(convertArabicNumerals(Quantity.getText())));
             command.executeUpdate();
@@ -90,14 +92,16 @@ public class AddItemController {
                 connection.commit();
             } catch (NumberFormatException e) {
                 connection.rollback();
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid number format. Transaction rolled back.", ButtonType.CLOSE);
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid number format. Transaction rolled back.",
+                        ButtonType.CLOSE);
                 alert.showAndWait();
                 return;
             }
         } catch (SQLException e) {
             try {
                 connection.rollback();
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Transaction failed and was rolled back.", ButtonType.CLOSE);
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Transaction failed and was rolled back.",
+                        ButtonType.CLOSE);
                 alert.showAndWait();
             } catch (SQLException rollbackEx) {
                 throw new RuntimeException("Failed to rollback transaction: " + rollbackEx.getMessage(), rollbackEx);

@@ -34,11 +34,20 @@ public class LoggedController {
     }
 
     @FXML
-    protected void AddItemButtonClick(ActionEvent event) throws IOException {
+    protected void onAddItemButtonClick(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("AddItem.fxml"));
         Node addPane = loader.load();
         AddItemController addController = loader.getController();
         addController.setConnection(connection);
         contentPane.getChildren().setAll(addPane);
+    }
+
+    @FXML
+    protected void onItemPriceHistoryClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemPriceHistory.fxml"));
+        Node itemPriceHistoryPane = loader.load();
+        ItemPriceHistoryController itemPriceHistoryController = loader.getController();
+        itemPriceHistoryController.setConnection(connection);
+        contentPane.getChildren().setAll(itemPriceHistoryPane);
     }
 }

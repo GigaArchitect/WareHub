@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<BorderPane fx:controller="nasar.mustafa.warehub.ItemPriceHistoryController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="451.0" prefWidth="714.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <Pane prefHeight="400.0" prefWidth="150.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="collect" layoutX="28.0" layoutY="46.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="95.0" text="تجميع" />
+            <Button fx:id="print" layoutX="28.0" layoutY="107.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="95.0" text="طباعة" />
+         </children>
+      </Pane>
+   </left>
+   <center>
+      <TableView nodeOrientation="RIGHT_TO_LEFT" prefHeight="317.0" prefWidth="450.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn prefWidth="86.0" text="مسلسل" />
+          <TableColumn prefWidth="172.0" text="أسم الصنف" />
+            <TableColumn prefWidth="82.0" text="نوع السعر" />
+            <TableColumn prefWidth="75.0" text="السعر" />
+            <TableColumn prefWidth="148.0" text="التاريخ" />
+        </columns>
+      </TableView>
+   </center>
+   <top>
+      <Pane prefHeight="64.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <ComboBox fx:id="itemsCombo" layoutX="169.0" layoutY="19.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="26.0" prefWidth="437.0" />
+            <Label layoutX="611.0" layoutY="18.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="38.0" prefWidth="84.0" stylesheets="@style.css" text="أختر الصنف" textAlignment="RIGHT" />
+         </children>
+      </Pane>
+   </top>
+</BorderPane>
