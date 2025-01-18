@@ -1,10 +1,9 @@
 package nasar.mustafa.warehub.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import nasar.mustafa.warehub.tableViewModels.ItemPriceHistoryRow;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -21,7 +20,27 @@ public class ItemPriceHistoryController {
     protected ComboBox<String> itemsCombo;
 
     @FXML
-    TableView tablePriceHistory;
+    protected TableView<ItemPriceHistoryRow> tablePriceHistory;
+
+    @FXML
+    protected TableColumn<ItemPriceHistoryRow, Integer> idColumn;
+
+    @FXML
+    protected TableColumn<ItemPriceHistoryRow, String> priceTypeColumn;
+
+    @FXML
+    protected TableColumn<ItemPriceHistoryRow, Double> priceColumn;
+
+    @FXML
+    protected TableColumn<ItemPriceHistoryRow, String> dateColumn;
+
+    @FXML
+    public void initialize() {
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        priceTypeColumn.setCellValueFactory(new PropertyValueFactory<>("priceType"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+    }
 
     protected void populateItemsCombo() {
         try {
@@ -42,13 +61,21 @@ public class ItemPriceHistoryController {
             return;
         }
         try {
-            ResultSet rs = connection.prepareStatement("SELECT price FROM item_price_history WHERE item_name = '" + selectedItem + "'").executeQuery();
+            ResultSet rs = connection.prepareStatement("SELECT item_prices.id, price_type, price, effective_date FROM item_prices INNER JOIN items ON item_prices.item_id = items.id WHERE items.name = '" + selectedItem + "'").executeQuery();
+            tablePriceHistory.getItems().clear();
             while (rs.next()) {
-                // Add the price to the table
+                int id = rs.getInt("id");
+                String priceType = rs.getString("price_type");
+                double price = rs.getDouble("price");
+                String date = rs.getString("effective_date");
+
+                ItemPriceHistoryRow row = new ItemPriceHistoryRow(id, priceType, price, date);
+                tablePriceHistory.getItems().add(row);
             }
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching item price history from the database", ButtonType.CLOSE);
             alert.showAndWait();
         }
+        tablePriceHistory.refresh();
     }
 }

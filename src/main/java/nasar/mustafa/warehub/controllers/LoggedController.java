@@ -27,7 +27,7 @@ public class LoggedController {
 
     @FXML
     protected void onAboutClick(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("About.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/About.fxml"));
         Node aboutPane = loader.load();
         AboutController aboutController = loader.getController();
         contentPane.getChildren().setAll(aboutPane);
@@ -36,7 +36,7 @@ public class LoggedController {
 
     @FXML
     protected void onAddItemButtonClick(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("AddItem.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/AddItem.fxml"));
         Node addPane = loader.load();
         AddItemController addController = loader.getController();
         addController.setConnection(connection);
@@ -45,7 +45,7 @@ public class LoggedController {
 
     @FXML
     protected void onItemPriceHistoryClick(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemPriceHistory.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/ItemPriceHistory.fxml"));
         Node itemPriceHistoryPane = loader.load();
         ItemPriceHistoryController itemPriceHistoryController = loader.getController();
         itemPriceHistoryController.setConnection(connection);

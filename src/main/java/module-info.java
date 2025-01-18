@@ -13,4 +13,5 @@ module nasar.mustafa.warehub {
     exports nasar.mustafa.warehub;
     exports nasar.mustafa.warehub.controllers;
     opens nasar.mustafa.warehub.controllers to javafx.fxml;
+    exports nasar.mustafa.warehub.tableViewModels;
 }
