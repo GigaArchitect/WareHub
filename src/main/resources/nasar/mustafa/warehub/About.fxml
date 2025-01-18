@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<Pane fx:id="aboutPane" stylesheets="@style.css" xmlns:fx="http://javafx.com/fxml" fx:controller="nasar.mustafa.warehub.AboutController">
+<Pane fx:id="aboutPane" stylesheets="@style.css" xmlns:fx="http://javafx.com/fxml" fx:controller="nasar.mustafa.warehub.controllers.AboutController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>

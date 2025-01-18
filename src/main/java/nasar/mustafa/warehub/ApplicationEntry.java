@@ -10,29 +10,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Connection;
 
-import org.apache.commons.dbutils.QueryRunner;
+import nasar.mustafa.warehub.controllers.LoggedController;
+import nasar.mustafa.warehub.ConnectionManager;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 
+
 public class ApplicationEntry extends Application {
-    public static Connection connection;
-    public static Connection connect(){
-        String con_string = "jdbc:sqlite:DATA.db";
-        try {
-            return DriverManager.getConnection(con_string);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public static String convertArabicNumerals(String input) {
         return input.replace("٠", "0")
@@ -70,7 +58,7 @@ public class ApplicationEntry extends Application {
         stage.setScene(scene);
         LoggedController loggedController = fxmlLoader.getController();
         loggedController.setStage(stage);
-        loggedController.setConnection(connection);
+        loggedController.setConnection(ConnectionManager.getInstance());
 
         Image icon = new Image(getClass().getResourceAsStream("WareHub.png"));
         stage.getIcons().add(icon);
@@ -80,8 +68,7 @@ public class ApplicationEntry extends Application {
     public static void main(String[] args) {
         System.setProperty("prism.lcdtext", "false");
         System.setProperty("prism.text", "t2k");
-        connection = connect();
-        runSqlFile(connection, "SQL/SETUP.sql");
+        runSqlFile(ConnectionManager.getInstance(), "SQL/SETUP.sql");
         launch();
     }
 }

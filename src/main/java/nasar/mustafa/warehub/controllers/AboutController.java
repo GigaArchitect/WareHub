@@ -1,4 +1,4 @@
-package nasar.mustafa.warehub;
+package nasar.mustafa.warehub.controllers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -6,10 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
-
-import java.sql.SQLException;
-
-import static nasar.mustafa.warehub.ApplicationEntry.connection;
 
 
 public class AboutController {

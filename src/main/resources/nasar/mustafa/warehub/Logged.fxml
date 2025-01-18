@@ -38,7 +38,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane prefHeight="238.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.LoggedController">
+<BorderPane prefHeight="238.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.LoggedController">
    <top>
     <MenuBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="18.0" prefWidth="681.0" stylesheets="@style.css" BorderPane.alignment="CENTER">
       <menus>

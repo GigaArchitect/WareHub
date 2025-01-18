@@ -1,4 +1,4 @@
-package nasar.mustafa.warehub;
+package nasar.mustafa.warehub.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
