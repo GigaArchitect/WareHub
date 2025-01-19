@@ -3,6 +3,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -11,7 +12,7 @@ import java.sql.Connection;
 
 public class LoggedController {
     @FXML
-    protected Pane contentPane;
+    protected BorderPane rootPane;
 
     protected Stage stage;
 
@@ -30,8 +31,8 @@ public class LoggedController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/About.fxml"));
         Node aboutPane = loader.load();
         AboutController aboutController = loader.getController();
-        contentPane.getChildren().setAll(aboutPane);
         aboutController.setMessage(stage.getWidth(), stage.getHeight());
+        rootPane.setCenter(aboutPane);
     }
 
     @FXML
@@ -40,7 +41,7 @@ public class LoggedController {
         Node addPane = loader.load();
         AddItemController addController = loader.getController();
         addController.setConnection(connection);
-        contentPane.getChildren().setAll(addPane);
+        rootPane.setCenter(addPane);
     }
 
     @FXML
@@ -49,6 +50,6 @@ public class LoggedController {
         Node itemPriceHistoryPane = loader.load();
         ItemPriceHistoryController itemPriceHistoryController = loader.getController();
         itemPriceHistoryController.setConnection(connection);
-        contentPane.getChildren().setAll(itemPriceHistoryPane);
+        rootPane.setCenter(itemPriceHistoryPane);
     }
 }

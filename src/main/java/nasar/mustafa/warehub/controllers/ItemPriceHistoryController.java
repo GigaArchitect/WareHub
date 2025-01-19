@@ -49,7 +49,8 @@ public class ItemPriceHistoryController {
                 itemsCombo.getItems().add(rs.getString("name"));
             }
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching items from the database", ButtonType.CLOSE);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching items from " +
+                    "the database", ButtonType.CLOSE);
             alert.showAndWait();
         }
     }
@@ -61,7 +62,9 @@ public class ItemPriceHistoryController {
             return;
         }
         try {
-            ResultSet rs = connection.prepareStatement("SELECT item_prices.id, price_type, price, effective_date FROM item_prices INNER JOIN items ON item_prices.item_id = items.id WHERE items.name = '" + selectedItem + "'").executeQuery();
+            ResultSet rs = connection.prepareStatement("SELECT item_prices.id, price_type, price, " +
+                    "effective_date FROM item_prices INNER JOIN items ON item_prices.item_id = " +
+                    "items.id WHERE items.name = '" + selectedItem + "'").executeQuery();
             tablePriceHistory.getItems().clear();
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -73,7 +76,8 @@ public class ItemPriceHistoryController {
                 tablePriceHistory.getItems().add(row);
             }
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching item price history from the database", ButtonType.CLOSE);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching item price history" +
+                    " from the database", ButtonType.CLOSE);
             alert.showAndWait();
         }
         tablePriceHistory.refresh();
