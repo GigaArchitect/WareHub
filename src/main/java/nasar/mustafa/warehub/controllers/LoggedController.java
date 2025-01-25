@@ -52,4 +52,33 @@ public class LoggedController {
         itemPriceHistoryController.setConnection(connection);
         rootPane.setCenter(itemPriceHistoryPane);
     }
+
+    @FXML
+    protected void onItemDeleteClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/ItemDelete.fxml"));
+        Node itemDeletePane = loader.load();
+        ItemDeleteController itemDeleteController = loader.getController();
+        itemDeleteController.setConnection(connection);
+        rootPane.setCenter(itemDeletePane);
+    }
+
+    @FXML
+    protected void onItemUpdateClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/ItemUpdate.fxml"));
+        Node itemUpdatePane = loader.load();
+        ItemUpdateController itemUpdateController = loader.getController();
+        itemUpdateController.setConnection(connection);
+        rootPane.setCenter(itemUpdatePane);
+    }
+
+    @FXML
+    protected void onAddVehicleClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/AddVehicle.fxml"));
+        Node addVehiclePane = loader.load();
+        AddVehicleController addVehicleController = loader.getController();
+        addVehicleController.setConnection(connection);
+        rootPane.setCenter(addVehiclePane);
+    }
+
+
 }

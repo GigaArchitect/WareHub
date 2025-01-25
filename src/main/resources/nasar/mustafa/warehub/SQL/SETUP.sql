@@ -2,7 +2,6 @@
 CREATE TABLE IF NOT EXISTS items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(255) NOT NULL UNIQUE,
-    stock_quantity INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME
 );
@@ -11,9 +10,10 @@ CREATE TABLE IF NOT EXISTS items (
 CREATE TABLE IF NOT EXISTS item_prices (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     item_id INTEGER NOT NULL,
-    price_type TEXT CHECK(price_type IN ('purchase', 'selling')) NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
+    price_buy DECIMAL(10,2) NOT NULL,
+    price_sell DECIMAL(10,2) NOT NULL,
     effective_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    stock_quantity INTEGER,
     end_date DATETIME,
     FOREIGN KEY (item_id) REFERENCES items(id)
 );
@@ -95,3 +95,5 @@ CREATE TABLE IF NOT EXISTS purchase_items (
     FOREIGN KEY (purchase_id) REFERENCES purchases(id),
     FOREIGN KEY (item_id) REFERENCES items(id)
 );
+
+-- We Should Track The quantity of each item, with specific price for each item, and the date of the price change.

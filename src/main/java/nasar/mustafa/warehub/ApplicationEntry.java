@@ -44,6 +44,7 @@ public class ApplicationEntry extends Application {
             InputStream is = ApplicationEntry.class.getResourceAsStream(path);
             Reader reader = new InputStreamReader(is);
             runner.runScript(reader);
+            connection.setAutoCommit(true);
         } catch (Exception e) {
             throw new RuntimeException("Error executing SQL file: " + path, e);
         }
@@ -68,7 +69,7 @@ public class ApplicationEntry extends Application {
     public static void main(String[] args) {
         System.setProperty("prism.lcdtext", "false");
         System.setProperty("prism.text", "t2k");
-        runSqlFile(ConnectionManager.getInstance(), "SQL/SETUP.sql");
+        runSqlFile(ConnectionManager.getInstance(), "SQL/SETUP.sql"); // This Bitchy Line caused auto commit to be set to false
         launch();
     }
 }

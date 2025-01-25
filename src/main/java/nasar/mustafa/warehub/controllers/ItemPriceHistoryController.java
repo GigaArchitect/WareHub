@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import nasar.mustafa.warehub.tableViewModels.ItemPriceHistoryRow;
+import org.controlsfx.control.SearchableComboBox;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -17,7 +18,7 @@ public class ItemPriceHistoryController {
     }
 
     @FXML
-    protected ComboBox<String> itemsCombo;
+    protected SearchableComboBox<String> itemsCombo;
 
     @FXML
     protected TableView<ItemPriceHistoryRow> tablePriceHistory;
@@ -26,10 +27,13 @@ public class ItemPriceHistoryController {
     protected TableColumn<ItemPriceHistoryRow, Integer> idColumn;
 
     @FXML
-    protected TableColumn<ItemPriceHistoryRow, String> priceTypeColumn;
+    protected TableColumn<ItemPriceHistoryRow, String> nameColumn;
 
     @FXML
-    protected TableColumn<ItemPriceHistoryRow, Double> priceColumn;
+    protected TableColumn<ItemPriceHistoryRow, Double> priceBuy;
+
+    @FXML
+    protected TableColumn<ItemPriceHistoryRow, Double> priceSell;
 
     @FXML
     protected TableColumn<ItemPriceHistoryRow, String> dateColumn;
@@ -37,8 +41,9 @@ public class ItemPriceHistoryController {
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        priceTypeColumn.setCellValueFactory(new PropertyValueFactory<>("priceType"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        priceBuy.setCellValueFactory(new PropertyValueFactory<>("priceBuy"));
+        priceSell.setCellValueFactory(new PropertyValueFactory<>("priceSell"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
     }
 
@@ -49,8 +54,7 @@ public class ItemPriceHistoryController {
                 itemsCombo.getItems().add(rs.getString("name"));
             }
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching items from " +
-                    "the database", ButtonType.CLOSE);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching items from the database", ButtonType.CLOSE);
             alert.showAndWait();
         }
     }
@@ -62,22 +66,22 @@ public class ItemPriceHistoryController {
             return;
         }
         try {
-            ResultSet rs = connection.prepareStatement("SELECT item_prices.id, price_type, price, " +
+            ResultSet rs = connection.prepareStatement("SELECT item_prices.id, items.name, item_prices.price_buy, item_prices.price_sell, " +
                     "effective_date FROM item_prices INNER JOIN items ON item_prices.item_id = " +
                     "items.id WHERE items.name = '" + selectedItem + "'").executeQuery();
             tablePriceHistory.getItems().clear();
             while (rs.next()) {
                 int id = rs.getInt("id");
-                String priceType = rs.getString("price_type");
-                double price = rs.getDouble("price");
+                String name = rs.getString("name");
+                double priceBuy = rs.getDouble("price_buy");
+                double priceSell = rs.getDouble("price_sell");
                 String date = rs.getString("effective_date");
 
-                ItemPriceHistoryRow row = new ItemPriceHistoryRow(id, priceType, price, date);
+                ItemPriceHistoryRow row = new ItemPriceHistoryRow(id, name, priceBuy, priceSell, date);
                 tablePriceHistory.getItems().add(row);
             }
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching item price history" +
-                    " from the database", ButtonType.CLOSE);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching item price history from the database", ButtonType.CLOSE);
             alert.showAndWait();
         }
         tablePriceHistory.refresh();

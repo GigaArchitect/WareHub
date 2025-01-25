@@ -13,6 +13,7 @@ public class ConnectionManager {
             throw new RuntimeException(e);
         }
     }
+
     public static Connection getInstance() {
         if (instance == null) {
             new ConnectionManager();

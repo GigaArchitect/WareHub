@@ -19,8 +19,8 @@
                       <MenuItem mnemonicParsing="false" onAction="#onItemPriceHistoryClick" text="حركة أسعار صنف" />
                     </items>
                   </Menu>
-            <MenuItem mnemonicParsing="false" text="تعديل صنف" />
-            <MenuItem mnemonicParsing="false" text="حذف صنف" />
+            <MenuItem onAction="#onItemUpdateClick" mnemonicParsing="false" text="تعديل صنف" />
+            <MenuItem onAction="#onItemDeleteClick" mnemonicParsing="false" text="حذف صنف" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="المخزن">
@@ -52,7 +52,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="إدارة سيارة">
                <items>
-                  <MenuItem mnemonicParsing="false" text="إضافة سيارة" />
+                  <MenuItem onAction="#onAddVehicleClick" mnemonicParsing="false" text="إضافة سيارة" />
                   <Menu mnemonicParsing="false" text="مصروفات سيارة">
                     <items>
                       <MenuItem mnemonicParsing="false" text="إضافة مصروفت سيارة" />

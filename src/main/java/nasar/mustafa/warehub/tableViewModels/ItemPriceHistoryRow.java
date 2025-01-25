@@ -2,14 +2,16 @@ package nasar.mustafa.warehub.tableViewModels;
 
 public class ItemPriceHistoryRow {
     private int id;
-    private String priceType;
-    private double price;
+    private String name;
+    private double priceBuy;
+    private double priceSell;
     private String date;
 
-    public ItemPriceHistoryRow(int id, String priceType, double price, String date) {
+    public ItemPriceHistoryRow(int id, String name, double priceBuy, double priceSell, String date) {
         this.id = id;
-        this.priceType = priceType;
-        this.price = price;
+        this.name = name;
+        this.priceBuy = priceBuy;
+        this.priceSell = priceSell;
         this.date = date;
     }
 
@@ -17,12 +19,16 @@ public class ItemPriceHistoryRow {
         return id;
     }
 
-    public String getPriceType() {
-        return priceType;
+    public String getName() {
+        return name;
     }
 
-    public double getPrice() {
-        return price;
+    public double getPriceBuy() {
+        return priceBuy;
+    }
+
+    public double getPriceSell() {
+        return priceSell;
     }
 
     public String getDate() {
@@ -33,12 +39,16 @@ public class ItemPriceHistoryRow {
         this.id = id;
     }
 
-    public void setPriceType(String priceType) {
-        this.priceType = priceType;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setPriceBuy(double priceBuy) {
+        this.priceBuy = priceBuy;
+    }
+
+    public void setPriceSell(double priceSell) {
+        this.priceSell = priceSell;
     }
 
     public void setDate(String date) {

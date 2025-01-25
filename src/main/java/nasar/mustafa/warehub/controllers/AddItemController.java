@@ -59,10 +59,8 @@ public class AddItemController {
         }
         try {
             connection.setAutoCommit(false);
-            PreparedStatement command = connection.prepareStatement("INSERT INTO items(name, stock_quantity) " +
-                    "VALUES(?, ?);");
+            PreparedStatement command = connection.prepareStatement("INSERT INTO items(name) VALUES(?);");
             command.setString(1, ItemName.getText());
-            command.setInt(2, Integer.parseInt(convertArabicNumerals(Quantity.getText())));
             command.executeUpdate();
 
             ResultSet generatedKeys = command.getGeneratedKeys();
@@ -74,20 +72,16 @@ public class AddItemController {
             try {
                 double purchasePrice = Double.parseDouble(convertArabicNumerals(ItemPriceBuy.getText()));
                 double sellingPrice = Double.parseDouble(convertArabicNumerals(ItemPriceSell.getText()));
+                int quantity = Integer.parseInt(convertArabicNumerals(Quantity.getText()));
 
-                PreparedStatement purchasePriceCommand = connection.prepareStatement(
-                        "INSERT INTO item_prices(item_id, price_type, price) VALUES(?, 'purchase', ?);"
+                PreparedStatement updatePrices = connection.prepareStatement(
+                        "INSERT INTO item_prices(item_id, price_sell, price_buy, stock_quantity) VALUES(?, ?, ?, ?);"
                 );
-                purchasePriceCommand.setInt(1, itemId);
-                purchasePriceCommand.setDouble(2, purchasePrice);
-                purchasePriceCommand.executeUpdate();
-
-                PreparedStatement sellingPriceCommand = connection.prepareStatement(
-                        "INSERT INTO item_prices(item_id, price_type, price) VALUES(?, 'selling', ?);"
-                );
-                sellingPriceCommand.setInt(1, itemId);
-                sellingPriceCommand.setDouble(2, sellingPrice);
-                sellingPriceCommand.executeUpdate();
+                updatePrices.setInt(1, itemId);
+                updatePrices.setDouble(2, sellingPrice);
+                updatePrices.setDouble(3, purchasePrice);
+                updatePrices.setInt(4, quantity);
+                updatePrices.executeUpdate();
 
                 connection.commit();
             } catch (NumberFormatException e) {
