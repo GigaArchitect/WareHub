@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import org.controlsfx.control.SearchableComboBox?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.AddVehicleExpenseController">
+    <children>
+        <Label layoutX="265.0" layoutY="45.0" text="اختر السيارة" />
+        <TableView fx:id="expenseTable" editable="true" layoutX="74.0" layoutY="262.0" prefHeight="200.0" prefWidth="450.0" tableMenuButtonVisible="true">
+            <columns>
+                <TableColumn fx:id="expensePriceColumn" prefWidth="225.0" text="سعرها" />
+                <TableColumn fx:id="expenseNameColumn" prefWidth="224.0" text="أسم التكلفة" />
+            </columns>
+        </TableView>
+        <Button layoutX="228.0" layoutY="489.0" mnemonicParsing="false" onAction="#addExpense" prefHeight="37.0" prefWidth="143.0" text="إضافة" />
+        <SearchableComboBox fx:id="vehicleComboBox" layoutX="180.0" layoutY="78.0" nodeOrientation="RIGHT_TO_LEFT" />
+        <TextField fx:id="expenseNameField" layoutX="189.0" layoutY="151.0" promptText="أسم التكلفة" />
+        <TextField fx:id="expensePriceField" layoutX="188.0" layoutY="205.0" promptText="السعر" />
+        <Label layoutX="432.0" layoutY="157.0" text="أسم التكلفة" />
+        <Label layoutX="445.0" layoutY="211.0" text="السعر" />
+        <Button layoutX="88.0" layoutY="182.0" mnemonicParsing="false" onAction="#addRow" prefHeight="37.0" prefWidth="71.0" text="إدخال" />
+    </children>
+</Pane>

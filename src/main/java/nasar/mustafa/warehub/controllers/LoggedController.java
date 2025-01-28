@@ -31,7 +31,7 @@ public class LoggedController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/About.fxml"));
         Node aboutPane = loader.load();
         AboutController aboutController = loader.getController();
-        aboutController.setMessage(stage.getWidth(), stage.getHeight());
+        aboutController.setMessage();
         rootPane.setCenter(aboutPane);
     }
 
@@ -80,5 +80,13 @@ public class LoggedController {
         rootPane.setCenter(addVehiclePane);
     }
 
+    @FXML
+    protected void onVehicleAddExpenseClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/AddVehicleExpense.fxml"));
+        Node vehicleAddExpensePane = loader.load();
+        AddVehicleExpenseController vehicleAddExpenseController = loader.getController();
+        vehicleAddExpenseController.setConnection(connection);
+        rootPane.setCenter(vehicleAddExpensePane);
+    }
 
 }
