@@ -44,6 +44,7 @@ public class ItemDeleteController {
             connection.prepareStatement("DELETE FROM items WHERE name = '" + selectedItem + "'").execute();
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Item deleted successfully", ButtonType.CLOSE);
             alert.showAndWait();
+            itemsCombo.getSelectionModel().clearSelection();
             itemsCombo.getItems().remove(selectedItem);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error deleting item", ButtonType.CLOSE);

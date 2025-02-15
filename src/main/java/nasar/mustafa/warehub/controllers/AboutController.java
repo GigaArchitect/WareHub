@@ -1,6 +1,5 @@
 package nasar.mustafa.warehub.controllers;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
@@ -17,8 +16,8 @@ public class AboutController {
     private Pane aboutPane;
     @FXML
     protected void setMessage() {
-        about.setText("This Program Is Written By Mustafa Nasser\nPhone : +201289031133\nGitHub : GigaArchitect");
-        about.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 16px;");
+        about.setText("WareHub\nThis Program Is Written By Mustafa Nasser\nPhone : +201289031133");
+        about.setStyle("-fx-font-size: 24px;");
         about.setTextAlignment(TextAlignment.CENTER);
     }
 }

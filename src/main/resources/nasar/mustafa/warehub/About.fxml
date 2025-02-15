@@ -9,5 +9,5 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
-    <Label fx:id="about" contentDisplay="CENTER" layoutX="140.0" layoutY="113.0" prefHeight="174.0" prefWidth="320.0" textAlignment="CENTER" />
+    <Label fx:id="about" alignment="CENTER" contentDisplay="CENTER" layoutX="47.0" layoutY="73.0" prefHeight="255.0" prefWidth="507.0" stylesheets="@style.css" textAlignment="CENTER" />
 </Pane>

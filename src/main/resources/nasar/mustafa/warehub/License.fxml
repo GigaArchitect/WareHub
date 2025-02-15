@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="416.0" layoutY="70.0" nodeOrientation="RIGHT_TO_LEFT" text="حقوق الملكية والترخيص" textAlignment="RIGHT">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <TextArea editable="false" layoutX="43.0" layoutY="104.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="231.0" prefWidth="515.0" text="حقوق الملكية والترخيص&#10;هذا البرنامج وجميع الملفات المرتبطة به (ويشار إليه لاحقًا بـ &quot;البرنامج&quot;) محمية بموجب قوانين حقوق الملكية الفكرية في جمهورية مصر العربية، وخاصة القانون رقم 82 لسنة 2002 بشأن حماية حقوق الملكية الفكرية، المادة الأولى. جميع الحقوق محفوظة لصاحب الحقوق.&#10;&#10;شروط الاستخدام&#10;يمنع نسخ أو تعديل أو توزيع أو إعادة بيع هذا البرنامج كليًا أو جزئيًا دون الحصول على إذن خطي مسبق من صاحب الحقوق.&#10;يتم منح رخصة استخدام محدودة للمستخدم المرخص له، ولا تعتبر هذه الرخصة نقلًا لحقوق الملكية أو حقوق التأليف.&#10;أي استخدام غير مصرح به لهذا البرنامج يعرض المخالف للمسؤولية القانونية بموجب القانون رقم 82 لسنة 2002.&#10;الضمانات وإخلاء المسؤولية&#10;هذا البرنامج يتم تقديمه &quot;كما هو&quot; دون أي ضمانات صريحة أو ضمنية، بما في ذلك، على سبيل المثال لا الحصر، ضمانات الجودة التجارية أو الملاءمة لغرض معين. لا يتحمل صاحب الحقوق أي مسؤولية عن أي أضرار مباشرة أو غير مباشرة ناتجة عن استخدام هذا البرنامج.&#10;&#10;" />
+   </children>
+</Pane>

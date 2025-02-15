@@ -30,6 +30,15 @@ public class ItemUpdateController {
     protected TextField quantityField;
 
     @FXML
+    protected TextField itemNameField;
+
+    @FXML
+    protected RadioButton updateLatestPriceRadio;
+
+    @FXML
+    protected RadioButton addNewPriceRadio;
+
+    @FXML
     protected void initialize() {
         itemsCombo.setOnAction(event -> onItemSelect());
     }
@@ -51,7 +60,7 @@ public class ItemUpdateController {
     protected void onItemSelect() {
         try {
             String selectedItem = itemsCombo.getValue();
-            String query = "SELECT price_sell, price_buy, stock_quantity " +
+            String query = "SELECT price_sell, price_buy, stock_quantity, name " +
                     "FROM item_prices " +
                     "INNER JOIN items ON item_prices.item_id = items.id " +
                     "WHERE items.name = ? " +
@@ -63,9 +72,11 @@ public class ItemUpdateController {
                 double priceSell = rs.getDouble("price_sell");
                 double priceBuy = rs.getDouble("price_buy");
                 int quantity = rs.getInt("stock_quantity");
+                String itemName = rs.getString("name");
                 priceSellField.setText(String.valueOf(priceSell));
                 priceBuyField.setText(String.valueOf(priceBuy));
                 quantityField.setText(String.valueOf(quantity));
+                itemNameField.setText(itemName);
             }
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching item details from the database", ButtonType.CLOSE);
@@ -77,9 +88,17 @@ public class ItemUpdateController {
     @FXML
     protected void onUpdatePress() {
         try {
-            System.out.println(connection.getAutoCommit());
+            if (!updateLatestPriceRadio.isSelected() && !addNewPriceRadio.isSelected()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Please select an option to update or add a new price.", ButtonType.CLOSE);
+                alert.showAndWait();
+                return;
+            }
+
+            connection.setAutoCommit(false); // Start transaction
+
             String selectedItem = itemsCombo.getValue();
-            String query = "SELECT price_sell, price_buy, stock_quantity " +
+            String newItemName = itemNameField.getText();
+            String query = "SELECT price_sell, price_buy, stock_quantity, name " +
                     "FROM item_prices " +
                     "INNER JOIN items ON item_prices.item_id = items.id " +
                     "WHERE items.name = ? " +
@@ -102,7 +121,20 @@ public class ItemUpdateController {
             double newBuyPrice = Double.parseDouble(ApplicationEntry.convertArabicNumerals(priceBuyField.getText()));
             int newQuantity = Integer.parseInt(ApplicationEntry.convertArabicNumerals(quantityField.getText()));
 
-            if (newSellPrice != currentSellPrice || newBuyPrice != currentBuyPrice) {
+            if (updateLatestPriceRadio.isSelected()) {
+                if (newSellPrice != currentSellPrice || newBuyPrice != currentBuyPrice || newQuantity != currentQuantity) {
+                    PreparedStatement updateQuantity = connection.prepareStatement(
+                            "UPDATE item_prices SET price_sell = ?, price_buy = ?, stock_quantity = ? WHERE item_id = (SELECT id FROM items WHERE name = ?) " +
+                                    "AND effective_date = (SELECT MAX(effective_date) FROM item_prices WHERE item_id = (SELECT id FROM items WHERE name = ?))"
+                    );
+                    updateQuantity.setDouble(1, newSellPrice);
+                    updateQuantity.setDouble(2, newBuyPrice);
+                    updateQuantity.setInt(3, newQuantity);
+                    updateQuantity.setString(4, selectedItem);
+                    updateQuantity.setString(5, selectedItem);
+                    updateQuantity.executeUpdate();
+                }
+            } else if (addNewPriceRadio.isSelected()) {
                 PreparedStatement updatePrices = connection.prepareStatement(
                         "INSERT INTO item_prices (item_id, price_sell, price_buy, stock_quantity) " +
                                 "SELECT id, ?, ?, ? FROM items WHERE name = ?"
@@ -112,23 +144,35 @@ public class ItemUpdateController {
                 updatePrices.setInt(3, newQuantity);
                 updatePrices.setString(4, selectedItem);
                 updatePrices.executeUpdate();
-            } else if (newQuantity != currentQuantity) {
-                PreparedStatement updateQuantity = connection.prepareStatement(
-                        "UPDATE item_prices SET stock_quantity = ? WHERE item_id = (SELECT id FROM items WHERE name = ?) " +
-                                "AND effective_date = (SELECT MAX(effective_date) FROM item_prices WHERE item_id = (SELECT id FROM items WHERE name = ?))"
-                );
-                updateQuantity.setInt(1, newQuantity);
-                updateQuantity.setString(2, selectedItem);
-                updateQuantity.setString(3, selectedItem);
-                updateQuantity.executeUpdate();
             }
 
+            if (!newItemName.equals(selectedItem)) {
+                PreparedStatement updateName = connection.prepareStatement(
+                        "UPDATE items SET name = ? WHERE name = ?"
+                );
+                updateName.setString(1, newItemName);
+                updateName.setString(2, selectedItem);
+                updateName.executeUpdate();
+            }
+
+            connection.commit(); // Commit transaction
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Item updated successfully", ButtonType.CLOSE);
             alert.showAndWait();
         } catch (Exception e) {
+            try {
+                connection.rollback(); // Rollback transaction on error
+            } catch (Exception rollbackException) {
+                System.out.println("Error rolling back transaction: " + rollbackException.getMessage());
+            }
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error updating item details", ButtonType.CLOSE);
             alert.showAndWait();
             System.out.println(e.getMessage());
+        } finally {
+            try {
+                connection.setAutoCommit(true); // Reset auto-commit mode
+            } catch (Exception finalException) {
+                System.out.println("Error resetting auto-commit mode: " + finalException.getMessage());
+            }
         }
     }
 }

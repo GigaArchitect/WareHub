@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import org.controlsfx.control.SearchableComboBox?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="692.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.ShowVehicleExpensesController">
+   <top>
+      <AnchorPane minHeight="-Infinity" prefHeight="65.0" prefWidth="692.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label contentDisplay="RIGHT" layoutX="599.0" layoutY="22.0" text="أختر السيارة" AnchorPane.rightAnchor="22.0" />
+            <SearchableComboBox fx:id="selectCarsCombo" layoutX="320.0" layoutY="16.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="37.0" prefWidth="259.0" AnchorPane.rightAnchor="113.0" />
+         </children>
+      </AnchorPane>
+   </top>
+   <left>
+      <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="collect" layoutX="72.0" layoutY="59.0" mnemonicParsing="false" onAction="#showExpenses" text="تجميع" />
+            <Button fx:id="print" layoutX="71.0" layoutY="130.0" mnemonicParsing="false" text="طباعة" />
+         </children>
+      </Pane>
+   </left>
+   <center>
+      <TableView fx:id="expensesTableView" nodeOrientation="RIGHT_TO_LEFT" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+            <TableColumn fx:id="expenseId" prefWidth="73.0" text="مسلسل" />
+          <TableColumn fx:id="expenseName" prefWidth="153.0" text="التكلفة" />
+          <TableColumn fx:id="expensePrice" prefWidth="94.0" text="السعر" />
+            <TableColumn fx:id="expenseDate" prefWidth="171.0" text="التاريخ" />
+        </columns>
+      </TableView>
+   </center>
+</BorderPane>

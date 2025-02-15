@@ -89,4 +89,30 @@ public class LoggedController {
         rootPane.setCenter(vehicleAddExpensePane);
     }
 
+    @FXML
+    protected void onVehicleShowExpensesClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/ShowVehicleExpenses.fxml"));
+        Node showVehicleExpensesPane = loader.load();
+        ShowVehicleExpensesController showVehicleExpensesController = loader.getController();
+        showVehicleExpensesController.setConnection(connection);
+        rootPane.setCenter(showVehicleExpensesPane);
+    }
+
+    @FXML
+    protected void onPaymentNoReceiptClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/PaymentNoReceipt.fxml"));
+        Node showPaymentNoReceiptPane = loader.load();
+        PaymentNoReceiptController paymentNoReceiptController = loader.getController();
+        paymentNoReceiptController.setConnection(connection);
+        rootPane.setCenter(showPaymentNoReceiptPane);
+    }
+
+    @FXML
+    protected void onAddSupplierClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/AddSupplier.fxml"));
+        Node showAddSupplierPane = loader.load();
+        AddSupplier addSupplier = loader.getController();
+        addSupplier.setConnection(connection);
+        rootPane.setCenter(showAddSupplierPane);
+    }
 }

@@ -18,12 +18,20 @@ CREATE TABLE IF NOT EXISTS item_prices (
     FOREIGN KEY (item_id) REFERENCES items(id)
 );
 
+CREATE TABLE IF NOT EXISTS suppliers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(255),
+    phone VARCHAR(255),
+    address TEXT
+);
+
 -- 4. Purchases Table
 CREATE TABLE IF NOT EXISTS purchases (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    supplier_name VARCHAR(255) NOT NULL,
+    supplier_id INT NOT NULL,
     total_cost DECIMAL(10,2) NOT NULL,
     purchase_date DATETIME DEFAULT CURRENT_TIMESTAMP
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(id);
 );
 
 -- 5. Sales Table
@@ -63,7 +71,7 @@ CREATE TABLE IF NOT EXISTS vehicle_expenses (
     FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
 );
 
--- 9. Payments Table
+-- 9. Payments Table , payments that customer paid
 CREATE TABLE IF NOT EXISTS payments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     customer_id INTEGER,
@@ -72,7 +80,7 @@ CREATE TABLE IF NOT EXISTS payments (
     FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
--- 10. Sales Items Table
+-- 10. Sales Items Table -- sales to customer
 CREATE TABLE IF NOT EXISTS sales_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     sale_id INTEGER NOT NULL,
@@ -84,7 +92,7 @@ CREATE TABLE IF NOT EXISTS sales_items (
     FOREIGN KEY (item_id) REFERENCES items(id)
 );
 
--- 11. Purchase Items Table
+-- 11. Purchase Items Table - purchase from supplier
 CREATE TABLE IF NOT EXISTS purchase_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     purchase_id INTEGER NOT NULL,

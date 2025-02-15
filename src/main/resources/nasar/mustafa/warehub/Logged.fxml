@@ -34,6 +34,7 @@
                     </items>
                   </Menu>
             <MenuItem mnemonicParsing="false" text="عرض البضاعة" />
+              <MenuItem onAction="#onAddSupplierClick" mnemonicParsing="false" text="إضافة مورد" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="العملاء">
@@ -47,7 +48,7 @@
         </Menu>
             <Menu mnemonicParsing="false" text="دفع لحساب">
                <items>
-                  <MenuItem mnemonicParsing="false" text="دفع لحساب بدون فاتورة" />
+                  <MenuItem onAction="#onPaymentNoReceiptClick" mnemonicParsing="false" text="دفع لحساب بدون فاتورة" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="إدارة سيارة">
@@ -56,7 +57,7 @@
                   <Menu mnemonicParsing="false" text="مصروفات سيارة">
                     <items>
                       <MenuItem onAction="#onVehicleAddExpenseClick" mnemonicParsing="false" text="إضافة مصروفت سيارة" />
-                        <MenuItem mnemonicParsing="false" text="عرض مصروفات سيارة" />
+                        <MenuItem onAction="#onVehicleShowExpensesClick" mnemonicParsing="false" text="عرض مصروفات سيارة" />
                     </items>
                   </Menu>
                </items>
