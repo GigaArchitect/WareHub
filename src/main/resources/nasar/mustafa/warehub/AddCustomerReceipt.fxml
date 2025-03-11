@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import org.controlsfx.control.SearchableComboBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="813.0" prefWidth="1043.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.AddCustomerReceiptController">
+   <top>
+      <AnchorPane prefHeight="178.0" prefWidth="1043.0" BorderPane.alignment="CENTER">
+         <children>
+            <SearchableComboBox fx:id="customerCombo" layoutX="646.0" layoutY="40.0" nodeOrientation="RIGHT_TO_LEFT" AnchorPane.rightAnchor="157.0" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="905.0" layoutY="46.0" prefHeight="25.0" prefWidth="98.0" text="أختر العميل" textAlignment="CENTER" AnchorPane.rightAnchor="40.0" />
+            <TextField fx:id="quantityField" layoutX="299.0" layoutY="102.0" AnchorPane.rightAnchor="521.0" />
+            <SearchableComboBox fx:id="itemCombo" layoutX="646.0" layoutY="102.0" nodeOrientation="RIGHT_TO_LEFT" AnchorPane.rightAnchor="157.0" />
+            <Label layoutX="918.0" layoutY="108.0" text="أختر الصنف" AnchorPane.rightAnchor="52.0" />
+            <Label layoutX="561.0" layoutY="108.0" text="الكمية" AnchorPane.rightAnchor="449.0" />
+         </children>
+      </AnchorPane>
+   </top>
+   <left>
+      <AnchorPane prefHeight="635.0" prefWidth="260.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button onAction="#addItem" layoutX="73.0" layoutY="83.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="114.0" text="إضافة صنف" />
+            <Button onAction="#saveReceipt" layoutX="73.0" layoutY="265.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="114.0" text="تسجيل فاتورة" />
+            <Button layoutX="73.0" layoutY="361.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="114.0" text="طباعة" />
+            <Button onAction="#deleteItem" layoutX="73.0" layoutY="169.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="114.0" text="مسح الصنف" />
+         </children>
+      </AnchorPane>
+   </left>
+   <bottom>
+      <AnchorPane prefHeight="103.0" prefWidth="1043.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="totalField" editable="false" layoutX="259.0" layoutY="13.0" AnchorPane.leftAnchor="259.0" AnchorPane.topAnchor="13.0" />
+            <Label layoutX="497.0" layoutY="19.0" text="الإجمالى الكلى" AnchorPane.leftAnchor="497.0" AnchorPane.topAnchor="19.0" />
+         </children></AnchorPane>
+   </bottom>
+   <center>
+      <TableView fx:id="receiptTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="dateColumn" prefWidth="205.0" text="الإجمالى" />
+            <TableColumn fx:id="quantityColumn" prefWidth="181.0" text="الكمية" />
+            <TableColumn fx:id="priceColumn" prefWidth="86.0" text="السعر" />
+            <TableColumn fx:id="itemColumn" prefWidth="200.0" text="الصنف" />
+            <TableColumn fx:id="serialColumn" prefWidth="110.0" text="المسلسل" />
+        </columns>
+      </TableView>
+   </center>
+</BorderPane>

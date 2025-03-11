@@ -6,6 +6,7 @@ module nasar.mustafa.warehub {
     requires commons.dbutils;
     requires org.mybatis;
     requires org.controlsfx.controls;
+    requires java.desktop;
 
     opens nasar.mustafa.warehub to javafx.fxml;
     exports nasar.mustafa.warehub;

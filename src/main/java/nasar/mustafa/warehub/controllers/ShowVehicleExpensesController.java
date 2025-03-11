@@ -7,6 +7,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.controlsfx.control.SearchableComboBox;
 
+import javafx.scene.control.TextField;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
@@ -28,6 +29,9 @@ public class ShowVehicleExpensesController {
 
     @FXML
     TableColumn<CarExpensesRow, String> expenseDate;
+
+    @FXML
+    private TextField totalExpensesField;
 
     protected Connection connection;
 
@@ -65,11 +69,25 @@ public class ShowVehicleExpensesController {
         }
 
         try {
-            ResultSet rs = connection.prepareStatement("SELECT * FROM vehicle_expenses WHERE vehicle_id = (SELECT id FROM vehicles WHERE plate_number = '" + selectCarsCombo.getValue() + "')").executeQuery();
+            String query = "SELECT * FROM vehicle_expenses WHERE vehicle_id = (SELECT id FROM vehicles WHERE plate_number = '" + selectCarsCombo.getValue() + "')";
+            ResultSet rs = connection.prepareStatement(query).executeQuery();
+
             expensesTableView.getItems().clear();
+            double totalExpenses = 0.0;
+
             while (rs.next()) {
-                expensesTableView.getItems().add(new CarExpensesRow(rs.getString("expense_name"), rs.getDouble("amount"), rs.getInt("id"), rs.getString("date")));
+                double amount = rs.getDouble("amount");
+                totalExpenses += amount;
+                expensesTableView.getItems().add(new CarExpensesRow(
+                        rs.getString("expense_name"),
+                        amount,
+                        rs.getInt("id"),
+                        rs.getString("date")
+                ));
             }
+
+            totalExpensesField.setText(String.format("%,.2f", totalExpenses));
+
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching expenses from the database: " + e.getMessage());
             alert.showAndWait();

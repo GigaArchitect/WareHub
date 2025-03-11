@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import org.controlsfx.control.SearchableComboBox?>
+
+
+<Pane fx:controller="nasar.mustafa.warehub.controllers.DeleteCustomerController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <SearchableComboBox fx:id="combo" layoutX="180.0" layoutY="151.0" />
+      <Button onAction="#deleteCustomer" layoutX="244.0" layoutY="225.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="112.0" text="حذف" />
+      <Label layoutX="266.0" layoutY="103.0" text="أختر العميل" />
+   </children>
+</Pane>

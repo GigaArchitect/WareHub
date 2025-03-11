@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -114,5 +113,67 @@ public class LoggedController {
         AddSupplier addSupplier = loader.getController();
         addSupplier.setConnection(connection);
         rootPane.setCenter(showAddSupplierPane);
+    }
+
+    @FXML
+    protected void onAddCustomerClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/AddCustomer.fxml"));
+        Node showAddCustomerPane = loader.load();
+        AddCustomerController addCustomer = loader.getController();
+        addCustomer.setConnection(connection);
+        rootPane.setCenter(showAddCustomerPane);
+    }
+
+    @FXML
+    protected void onDeleteCustomerClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/DeleteCustomer.fxml"));
+        Node showDeleteCustomerPane = loader.load();
+        DeleteCustomerController deleteCustomer = loader.getController();
+        deleteCustomer.setConnection(connection);
+        rootPane.setCenter(showDeleteCustomerPane);
+    }
+
+    @FXML
+    protected void onUpdateCustomerClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/UpdateCustomer.fxml"));
+        Node showUpdateCustomerPane = loader.load();
+        UpdateCustomerController updateCustomer = loader.getController();
+        updateCustomer.setConnection(connection);
+        rootPane.setCenter(showUpdateCustomerPane);
+    }
+
+    @FXML
+    protected void onAddCustomerReceiptClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/AddCustomerReceipt.fxml"));
+        Node showAddCustomerReceiptPane = loader.load();
+        AddCustomerReceiptController addCustomerReceipt = loader.getController();
+        addCustomerReceipt.setConnection(connection);
+        rootPane.setCenter(showAddCustomerReceiptPane);
+    }
+
+    @FXML
+    protected void onCustomerAccountStatementClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/CustomerAccountStatement.fxml"));
+        Node showCustomerAccountStatementPane = loader.load();
+        CustomerAccountStatementController customerAccountStatement = loader.getController();
+        customerAccountStatement.setConnection(connection);
+        rootPane.setCenter(showCustomerAccountStatementPane);
+    }
+
+    @FXML
+    protected void onSalesReportsClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/SalesReports.fxml"));
+        Node salesReportsPane = loader.load();
+        SalesReportsController salesReportsController = loader.getController();
+        salesReportsController.setConnection(connection);
+        rootPane.setCenter(salesReportsPane);
+    }
+
+    @FXML void onPurchaseOperationClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/PurchaseOperation.fxml"));
+        Node purchaseOperationPane = loader.load();
+        PurchaseOperationController purchaseOperationController = loader.getController();
+        purchaseOperationController.setConnection(connection);
+        rootPane.setCenter(purchaseOperationPane);
     }
 }

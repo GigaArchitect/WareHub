@@ -26,12 +26,13 @@ CREATE TABLE IF NOT EXISTS suppliers (
 );
 
 -- 4. Purchases Table
+-- Fix purchases table definition
 CREATE TABLE IF NOT EXISTS purchases (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    supplier_id INT NOT NULL,
+    supplier_id INTEGER NOT NULL,
     total_cost DECIMAL(10,2) NOT NULL,
-    purchase_date DATETIME DEFAULT CURRENT_TIMESTAMP
-    FOREIGN KEY (supplier_id) REFERENCES suppliers(id);
+    purchase_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
 );
 
 -- 5. Sales Table
@@ -46,10 +47,10 @@ CREATE TABLE IF NOT EXISTS sales (
 -- 6. Customers Table
 CREATE TABLE IF NOT EXISTS customers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(255) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    phone VARCHAR(20),
     email VARCHAR(255),
-    address TEXT
+    address TEXT NOT NULL
 );
 
 -- 7. Vehicles Table

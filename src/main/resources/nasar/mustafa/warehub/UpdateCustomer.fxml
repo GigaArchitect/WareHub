@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import org.controlsfx.control.SearchableComboBox?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="674.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.UpdateCustomerController">
+   <children>
+      <Button layoutX="260.0" layoutY="497.0" mnemonicParsing="false" onAction="#updateCustomer" prefHeight="37.0" prefWidth="155.0" text="تعديل" />
+      <TextField fx:id="name" layoutX="186.0" layoutY="195.0" />
+      <TextField fx:id="address" layoutX="186.0" layoutY="338.0" />
+      <TextField fx:id="phone" layoutX="186.0" layoutY="270.0" />
+      <TextField fx:id="email" layoutX="186.0" layoutY="417.0" />
+      <Label layoutX="444.0" layoutY="344.0" text="العنوان" />
+      <Label layoutX="431.0" layoutY="276.0" text="رقم التليفون" />
+      <Label layoutX="444.0" layoutY="423.0" text="الإيميل" />
+      <Label layoutX="450.0" layoutY="201.0" text="الأسم" />
+      <SearchableComboBox fx:id="combo" layoutX="172.0" layoutY="99.0" nodeOrientation="RIGHT_TO_LEFT" onAction="#populateTextFields" prefHeight="37.0" prefWidth="316.0" />
+      <Label layoutX="304.0" layoutY="59.0" text="أختر العميل" />
+   </children>
+</Pane>

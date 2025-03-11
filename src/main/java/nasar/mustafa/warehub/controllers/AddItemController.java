@@ -16,7 +16,7 @@ import static nasar.mustafa.warehub.ApplicationEntry.convertArabicNumerals;
 public class AddItemController {
     private Connection connection;
 
-    public void setConnection(Connection connection){
+    public void setConnection(Connection connection) {
         this.connection = connection;
     }
 
@@ -34,27 +34,27 @@ public class AddItemController {
 
     @FXML
     protected void addItem(ActionEvent event) {
-        if (connection == null){
+        if (connection == null) {
             System.out.println("Connection is not set !");
             return;
         }
-        if (ItemName.getText() == null || ItemName.getText().trim().isEmpty()){
+        if (ItemName.getText() == null || ItemName.getText().trim().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "أسم الصنف فارغ أو غير صحيح",
                     ButtonType.CANCEL);
             alert.showAndWait();
             return;
         }
-        if (ItemPriceBuy.getText() == null || ItemPriceBuy.getText().trim().isEmpty()){
+        if (ItemPriceBuy.getText() == null || ItemPriceBuy.getText().trim().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "تأكد من صحة الأسعار", ButtonType.CANCEL);
             alert.showAndWait();
             return;
         }
-        if (ItemPriceSell.getText() == null || ItemPriceSell.getText().trim().isEmpty()){
+        if (ItemPriceSell.getText() == null || ItemPriceSell.getText().trim().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "تأكد من صحة الأسعار", ButtonType.CANCEL);
             alert.showAndWait();
             return;
         }
-        if (Quantity.getText() == null || Quantity.getText().trim().isEmpty()){
+        if (Quantity.getText() == null || Quantity.getText().trim().isEmpty()) {
             Quantity.setText("0");
         }
         try {
@@ -75,8 +75,7 @@ public class AddItemController {
                 int quantity = Integer.parseInt(convertArabicNumerals(Quantity.getText()));
 
                 PreparedStatement updatePrices = connection.prepareStatement(
-                        "INSERT INTO item_prices(item_id, price_sell, price_buy, stock_quantity) VALUES(?, ?, ?, ?);"
-                );
+                        "INSERT INTO item_prices(item_id, price_sell, price_buy, stock_quantity) VALUES(?, ?, ?, ?);");
                 updatePrices.setInt(1, itemId);
                 updatePrices.setDouble(2, sellingPrice);
                 updatePrices.setDouble(3, purchasePrice);

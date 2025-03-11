@@ -4,12 +4,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="692.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.ShowVehicleExpensesController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="616.0" prefWidth="892.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.ShowVehicleExpensesController">
    <top>
       <AnchorPane minHeight="-Infinity" prefHeight="65.0" prefWidth="692.0" BorderPane.alignment="CENTER">
          <children>
@@ -21,8 +22,8 @@
    <left>
       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="collect" layoutX="72.0" layoutY="59.0" mnemonicParsing="false" onAction="#showExpenses" text="تجميع" />
-            <Button fx:id="print" layoutX="71.0" layoutY="130.0" mnemonicParsing="false" text="طباعة" />
+            <Button fx:id="collect" layoutX="72.0" layoutY="6.0" mnemonicParsing="false" onAction="#showExpenses" text="تجميع" />
+            <Button fx:id="print" layoutX="70.0" layoutY="65.0" mnemonicParsing="false" text="طباعة" />
          </children>
       </Pane>
    </left>
@@ -30,10 +31,18 @@
       <TableView fx:id="expensesTableView" nodeOrientation="RIGHT_TO_LEFT" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
             <TableColumn fx:id="expenseId" prefWidth="73.0" text="مسلسل" />
-          <TableColumn fx:id="expenseName" prefWidth="153.0" text="التكلفة" />
-          <TableColumn fx:id="expensePrice" prefWidth="94.0" text="السعر" />
+          <TableColumn fx:id="expenseName" prefWidth="153.0" text="أسم التكلفة" />
             <TableColumn fx:id="expenseDate" prefWidth="171.0" text="التاريخ" />
+          <TableColumn fx:id="expensePrice" prefWidth="94.0" text="السعر" />
         </columns>
       </TableView>
    </center>
+   <bottom>
+      <Pane prefHeight="54.0" prefWidth="892.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="totalExpensesField" layoutX="201.0" layoutY="8.0" />
+            <Label layoutX="446.0" layoutY="14.0" text="إجمالى التكاليف" />
+         </children>
+      </Pane>
+   </bottom>
 </BorderPane>

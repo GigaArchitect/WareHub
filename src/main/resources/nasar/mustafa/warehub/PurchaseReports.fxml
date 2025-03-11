@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.PurchaseReportsController">
+   <center>
+      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
+         <children>
+            <Label alignment="CENTER" text="تقارير المشتريات" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="10.0">
+               <children>
+                  <Label text="من تاريخ:" />
+                  <DatePicker fx:id="fromDatePicker" />
+                  <Label text="إلى تاريخ:" />
+                  <DatePicker fx:id="toDatePicker" />
+                  <Label text="المورد:" />
+                  <ComboBox fx:id="supplierComboBox" prefWidth="200.0" />
+                  <Button fx:id="searchButton" mnemonicParsing="false" onAction="#onSearchPurchases" text="بحث" />
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <TableView fx:id="purchaseTable" nodeOrientation="RIGHT_TO_LEFT">
+               <columns>
+                  <TableColumn fx:id="dateColumn" prefWidth="100.0" text="التاريخ" />
+                  <TableColumn fx:id="invoiceNumberColumn" prefWidth="100.0" text="رقم الفاتورة" />
+                  <TableColumn fx:id="supplierColumn" prefWidth="150.0" text="المورد" />
+                  <TableColumn fx:id="totalAmountColumn" prefWidth="120.0" text="المبلغ الإجمالي" />
+                  <TableColumn fx:id="detailsColumn" prefWidth="100.0" text="التفاصيل" />
+               </columns>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </TableView>
+            <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" spacing="10.0">
+               <children>
+                  <Label text="إجمالي المشتريات:" />
+                  <Label fx:id="totalPurchasesLabel" text="0.0">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="printReportButton" mnemonicParsing="false" onAction="#onPrintReport" text="طباعة التقرير" />
+                  <Button fx:id="exportButton" mnemonicParsing="false" onAction="#onExportToExcel" text="تصدير إلى Excel" />
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </center>
+</BorderPane>
