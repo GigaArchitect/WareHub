@@ -23,7 +23,7 @@
       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="collect" layoutX="72.0" layoutY="6.0" mnemonicParsing="false" onAction="#showExpenses" text="تجميع" />
-            <Button fx:id="print" layoutX="70.0" layoutY="65.0" mnemonicParsing="false" text="طباعة" />
+            <Button fx:id="print" layoutX="31.0" layoutY="68.0" mnemonicParsing="false" onAction="#onExportPDF" text="تصدير كملف PDF" />
          </children>
       </Pane>
    </left>
@@ -40,7 +40,7 @@
    <bottom>
       <Pane prefHeight="54.0" prefWidth="892.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="totalExpensesField" layoutX="201.0" layoutY="8.0" />
+            <TextField fx:id="totalExpensesField" editable="false" layoutX="201.0" layoutY="8.0" />
             <Label layoutX="446.0" layoutY="14.0" text="إجمالى التكاليف" />
          </children>
       </Pane>

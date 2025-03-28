@@ -6,13 +6,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-
-<Pane fx:controller="nasar.mustafa.warehub.controllers.PaymentNoReceiptController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.PaymentNoReceiptController">
    <children>
       <SearchableComboBox fx:id="itemsCombo" layoutX="180.0" layoutY="104.0" nodeOrientation="RIGHT_TO_LEFT" />
       <Label layoutX="440.0" layoutY="110.0" text="اختر العميل" />
-      <TextField fx:id="payment" layoutX="188.0" layoutY="216.0" />
+      <TextField fx:id="payment" layoutX="189.0" layoutY="216.0" />
       <Label layoutX="434.0" layoutY="222.0" text="المبلغ المدفوع" />
-      <Button onAction="#onPayment" layoutX="253.0" layoutY="303.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="95.0" text="دفع" />
+      <Button layoutX="253.0" layoutY="303.0" mnemonicParsing="false" onAction="#onPayment" prefHeight="37.0" prefWidth="95.0" text="دفع" />
+      <Label layoutX="452.0" layoutY="170.0" text="الرصيد" />
+      <Label fx:id="to_pay" layoutX="280.0" layoutY="170.0" style="-fx-font-weight: bold;" text="-------" />
    </children>
 </Pane>

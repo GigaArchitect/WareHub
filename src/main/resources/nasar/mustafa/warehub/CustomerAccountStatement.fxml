@@ -16,8 +16,8 @@
          <children>
             <Label fx:id="paidAmountLabel" layoutX="469.0" layoutY="13.0" text="المبلغ المدفوع" />
             <Label fx:id="transactionVolumeLabel" layoutX="1012.0" layoutY="13.0" text="حجم التعامل" />
-            <TextField fx:id="transactionVolumeField" layoutX="725.0" layoutY="7.0" />
-            <TextField fx:id="paidAmountField" layoutX="200.0" layoutY="7.0" />
+            <TextField fx:id="transactionVolumeField" editable="false" layoutX="725.0" layoutY="7.0" />
+            <TextField fx:id="paidAmountField" editable="false" layoutX="200.0" layoutY="7.0" />
          </children>
       </Pane>
    </bottom>
@@ -25,7 +25,7 @@
       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="aggregateButton" layoutX="71.0" layoutY="165.0" mnemonicParsing="false" onAction="#handleAggregate" text="تجميع" />
-            <Button fx:id="printButton" layoutX="70.0" layoutY="239.0" mnemonicParsing="false" onAction="#handlePrint" text="طباعة" />
+            <Button fx:id="printButton" layoutX="31.0" layoutY="238.0" mnemonicParsing="false" onAction="#onExportPDF" text="تصدير كملف PDF" />
          </children>
       </Pane>
    </left>
@@ -40,6 +40,7 @@
    <center>
       <TableView fx:id="accountStatementTable" nodeOrientation="RIGHT_TO_LEFT" prefHeight="588.0" prefWidth="721.0" BorderPane.alignment="CENTER">
         <columns>
+          <TableColumn fx:id="idColumn" prefWidth="150.0" text="مسلسل" />
           <TableColumn fx:id="dateColumn" prefWidth="150.0" text="التاريخ" />
           <TableColumn fx:id="descriptionColumn" minWidth="0.0" prefWidth="121.0" text="الوصف" />
           <TableColumn fx:id="amountColumn" prefWidth="159.0" text="المبلغ" />

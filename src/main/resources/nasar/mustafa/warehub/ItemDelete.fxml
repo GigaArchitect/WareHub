@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<Pane fx:controller="nasar.mustafa.warehub.controllers.ItemDeleteController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+<VBox alignment="TOP_CENTER" maxWidth="-Infinity" prefHeight="242.0" prefWidth="438.0" style="-fx-spacing: 15;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.ItemDeleteController">
    <children>
-      <SearchableComboBox fx:id="itemsCombo" layoutX="125.0" layoutY="182.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="37.0" prefWidth="322.0" stylesheets="@style.css" />
-      <Label layoutX="243.0" layoutY="135.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="37.0" prefWidth="87.0" stylesheets="@style.css" text="اختر الصنف" />
-      <Button onAction="#onDeleteButtonClick" layoutX="232.0" layoutY="244.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="137.0" stylesheets="@style.css" text="حذف الصنف" />
-      <Label layoutX="81.0" layoutY="319.0" stylesheets="@style.css" text="ملاحظة ، عند حذف الصنف ، ستحذف جميع بياناته من تحرك أسعار وفواتير" />
+      <Label nodeOrientation="RIGHT_TO_LEFT" style="-fx-padding: 15;" stylesheets="@style.css" text="حذف صنف" textAlignment="CENTER" />
+      <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 25;" />
+      <Label nodeOrientation="RIGHT_TO_LEFT" stylesheets="@style.css" text="اختر الصنف" textAlignment="CENTER" />
+      <SearchableComboBox fx:id="itemsCombo" nodeOrientation="RIGHT_TO_LEFT" prefHeight="37.0" prefWidth="322.0" stylesheets="@style.css" />
+      <Button mnemonicParsing="false" onAction="#onDeleteButtonClick" prefHeight="55.0" prefWidth="137.0" stylesheets="@style.css" text="حذف" />
+      <Label stylesheets="@style.css" text="ملاحظة ، عند حذف الصنف ، ستحذف جميع بياناته من تحرك أسعار وفواتير" />
    </children>
-</Pane>
+</VBox>

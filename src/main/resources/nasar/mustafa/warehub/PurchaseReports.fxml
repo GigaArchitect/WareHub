@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.PurchaseReportsController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="795.0" prefWidth="1302.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.PurchaseReportsController">
    <center>
-      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
+      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="747.0" prefWidth="1302.0" spacing="10.0">
          <children>
             <Label alignment="CENTER" text="تقارير المشتريات" textAlignment="CENTER">
                <font>
@@ -23,40 +23,43 @@
             </Label>
             <HBox alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="10.0">
                <children>
-                  <Label text="من تاريخ:" />
-                  <DatePicker fx:id="fromDatePicker" />
-                  <Label text="إلى تاريخ:" />
-                  <DatePicker fx:id="toDatePicker" />
-                  <Label text="المورد:" />
+                  <Label text="من تاريخ" />
+                  <DatePicker fx:id="fromDatePicker" nodeOrientation="RIGHT_TO_LEFT" />
+                  <Label text="إلى تاريخ" />
+                  <DatePicker fx:id="toDatePicker" nodeOrientation="RIGHT_TO_LEFT" />
+                  <Label text="المورد" />
                   <ComboBox fx:id="supplierComboBox" prefWidth="200.0" />
-                  <Button fx:id="searchButton" mnemonicParsing="false" onAction="#onSearchPurchases" text="بحث" />
+                  <Label text="الصنف" />
+                  <ComboBox fx:id="itemComboBox" prefWidth="200.0" />
                </children>
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </HBox>
-            <TableView fx:id="purchaseTable" nodeOrientation="RIGHT_TO_LEFT">
+            <TableView fx:id="purchasesTable" nodeOrientation="RIGHT_TO_LEFT" prefHeight="587.0" prefWidth="1282.0">
                <columns>
                   <TableColumn fx:id="dateColumn" prefWidth="100.0" text="التاريخ" />
                   <TableColumn fx:id="invoiceNumberColumn" prefWidth="100.0" text="رقم الفاتورة" />
                   <TableColumn fx:id="supplierColumn" prefWidth="150.0" text="المورد" />
-                  <TableColumn fx:id="totalAmountColumn" prefWidth="120.0" text="المبلغ الإجمالي" />
-                  <TableColumn fx:id="detailsColumn" prefWidth="100.0" text="التفاصيل" />
+                  <TableColumn fx:id="itemColumn" prefWidth="150.0" text="الصنف" />
+                  <TableColumn fx:id="quantityColumn" prefWidth="80.0" text="الكمية" />
+                  <TableColumn fx:id="priceColumn" prefWidth="100.0" text="السعر" />
+                  <TableColumn fx:id="totalColumn" prefWidth="120.0" text="الإجمالي" />
                </columns>
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </TableView>
-            <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" spacing="10.0">
+            <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" prefHeight="20.0" prefWidth="1046.0" spacing="10.0">
                <children>
-                  <Label text="إجمالي المشتريات:" />
+                  <Label contentDisplay="TOP" nodeOrientation="RIGHT_TO_LEFT" text="إجمالي المشتريات" textAlignment="RIGHT" />
                   <Label fx:id="totalPurchasesLabel" text="0.0">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Button fx:id="printReportButton" mnemonicParsing="false" onAction="#onPrintReport" text="طباعة التقرير" />
-                  <Button fx:id="exportButton" mnemonicParsing="false" onAction="#onExportToExcel" text="تصدير إلى Excel" />
+                  <Button fx:id="printReportButton" mnemonicParsing="false" onAction="#onGenerateReport" text="تجميع التقرير" />
+                  <Button fx:id="exportButton" mnemonicParsing="false" onAction="#onExportReport" text="تصدير كملف PDF" />
                </children>
                <VBox.margin>
                   <Insets top="10.0" />

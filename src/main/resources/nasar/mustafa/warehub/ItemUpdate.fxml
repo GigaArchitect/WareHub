@@ -5,27 +5,35 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="517.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.ItemUpdateController">
+
+<VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="444.0" prefWidth="281.0" style="-fx-spacing: 10;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.ItemUpdateController">
    <children>
-      <SearchableComboBox fx:id="itemsCombo" layoutX="118.0" layoutY="36.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="37.0" prefWidth="281.0" />
-      <Label layoutX="432.0" layoutY="44.0" nodeOrientation="RIGHT_TO_LEFT" text="أختر الصنف" textAlignment="RIGHT" />
-      <Button layoutX="240.0" layoutY="431.0" mnemonicParsing="false" onAction="#onUpdatePress" prefHeight="37.0" prefWidth="121.0" text="تعديل" />
-      <TextField fx:id="priceSellField" layoutX="275.0" layoutY="153.0" prefHeight="37.0" prefWidth="121.0" />
-      <TextField fx:id="priceBuyField" layoutX="275.0" layoutY="211.0" prefHeight="37.0" prefWidth="121.0" />
-      <TextField fx:id="quantityField" layoutX="275.0" layoutY="268.0" prefHeight="37.0" prefWidth="121.0" />
-      <Label layoutX="443.0" layoutY="159.0" nodeOrientation="RIGHT_TO_LEFT" text="سعر البيع" textAlignment="RIGHT" />
-      <Label layoutX="437.0" layoutY="216.0" nodeOrientation="RIGHT_TO_LEFT" text="سعر الشراء" textAlignment="RIGHT" />
-      <Label layoutX="428.0" layoutY="274.0" nodeOrientation="RIGHT_TO_LEFT" text="الكمية الأبتدائية" textAlignment="RIGHT" />
-      <RadioButton fx:id="updateLatestPriceRadio" layoutX="384.0" layoutY="327.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="تعديل أحدث سعر">
+      <Label style="-fx-padding: 15;" text="تعديل صنف" />
+      <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 15;" />
+      <Label nodeOrientation="RIGHT_TO_LEFT" text="أختر الصنف" textAlignment="RIGHT" />
+      <SearchableComboBox fx:id="itemsCombo" nodeOrientation="RIGHT_TO_LEFT" prefHeight="37.0" prefWidth="281.0" />
+      <Label text="أسم الصنف" />
+      <TextField fx:id="itemNameField" prefHeight="37.0" prefWidth="121.0" />
+      <Label nodeOrientation="RIGHT_TO_LEFT" text="سعر البيع" textAlignment="RIGHT" />
+      <TextField fx:id="priceSellField" prefHeight="37.0" prefWidth="121.0" />
+      <Label nodeOrientation="RIGHT_TO_LEFT" text="سعر الشراء" textAlignment="RIGHT" />
+      <TextField fx:id="priceBuyField" prefHeight="37.0" prefWidth="121.0" />
+      <Label nodeOrientation="RIGHT_TO_LEFT" text="الكمية الأبتدائية" textAlignment="RIGHT" />
+      <TextField fx:id="quantityField" prefHeight="37.0" prefWidth="121.0" />
+      <RadioButton fx:id="updateLatestPriceRadio" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="تعديل أحدث سعر">
          <toggleGroup>
             <ToggleGroup fx:id="choice" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="addNewPriceRadio" layoutX="316.0" layoutY="368.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="إضافة سعر جديد بكمية جديدة" toggleGroup="$choice" />
-      <Label layoutX="433.0" layoutY="109.0" text="أسم الصنف" />
-      <TextField fx:id="itemNameField" layoutX="275.0" layoutY="101.0" prefHeight="37.0" prefWidth="121.0" />
+      <RadioButton fx:id="addNewPriceRadio" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="إضافة سعر جديد بكمية جديدة" toggleGroup="$choice" />
+      <HBox alignment="TOP_CENTER" style="-fx-padding: 25;">
+         <children>
+            <Button mnemonicParsing="false" onAction="#onUpdatePress" prefHeight="37.0" prefWidth="121.0" text="تعديل" textAlignment="CENTER" />
+         </children>
+      </HBox>
    </children>
-</Pane>
+</VBox>

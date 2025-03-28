@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.SalesAndPurchaseReportsController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="658.0" prefWidth="1140.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.SalesAndPurchaseReportsController">
    <center>
       <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
          <children>
@@ -28,13 +28,12 @@
             </Label>
             <HBox alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" spacing="10.0">
                <children>
-                  <Label text="من تاريخ:" />
+                  <Label text="من تاريخ" />
                   <DatePicker fx:id="fromDatePicker" />
-                  <Label text="إلى تاريخ:" />
+                  <Label text="إلى تاريخ" />
                   <DatePicker fx:id="toDatePicker" />
-                  <Label text="نوع التقرير:" />
+                  <Label text="نوع التقرير" />
                   <ComboBox fx:id="reportTypeComboBox" prefWidth="150.0" />
-                  <Button fx:id="generateReportButton" mnemonicParsing="false" onAction="#onGenerateReport" text="إنشاء التقرير" />
                </children>
                <VBox.margin>
                   <Insets top="10.0" />
@@ -58,10 +57,10 @@
                      <content>
                         <BarChart fx:id="reportChart" animated="false" title="مقارنة المبيعات والمشتريات">
                           <xAxis>
-                            <CategoryAxis side="BOTTOM" label="الفترة الزمنية" />
+                            <CategoryAxis label="الفترة الزمنية" side="BOTTOM" />
                           </xAxis>
                           <yAxis>
-                            <NumberAxis side="LEFT" label="المبلغ" />
+                            <NumberAxis label="المبلغ" side="LEFT" />
                           </yAxis>
                         </BarChart>
                      </content>
@@ -70,7 +69,7 @@
             </TabPane>
             <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT" spacing="20.0">
                <children>
-                  <Label text="إجمالي المبيعات:">
+                  <Label text="إجمالي المبيعات">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -80,7 +79,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label text="إجمالي المشتريات:">
+                  <Label text="إجمالي المشتريات">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -90,7 +89,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label text="صافي الربح:">
+                  <Label text="صافي الربح">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -105,10 +104,10 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </HBox>
-            <HBox alignment="CENTER" spacing="20.0">
+            <HBox alignment="CENTER_RIGHT" spacing="20.0">
                <children>
-                  <Button fx:id="printReportButton" mnemonicParsing="false" onAction="#onPrintReport" text="طباعة التقرير" />
-                  <Button fx:id="exportButton" mnemonicParsing="false" onAction="#onExportToExcel" text="تصدير إلى Excel" />
+                  <Button fx:id="exportButton" mnemonicParsing="false" onAction="#onExportReport" text="تصدير كملف PDF" />
+                  <Button fx:id="generateReportButton" mnemonicParsing="false" onAction="#onGenerateReport" text="تجميع التقرير" />
                </children>
                <VBox.margin>
                   <Insets top="10.0" />

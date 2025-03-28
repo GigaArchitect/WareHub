@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS sales_items (
     item_id INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
     unit_price DECIMAL(10,2) NOT NULL,
+    unit_price_buy DECIMAL(10,2) NOT NULL,
     total_price DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (sale_id) REFERENCES sales(id),
     FOREIGN KEY (item_id) REFERENCES items(id)

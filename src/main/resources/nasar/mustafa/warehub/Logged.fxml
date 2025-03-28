@@ -13,12 +13,7 @@
         <Menu mnemonicParsing="false" text="الأصناف">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#onAddItemButtonClick" text="إضافة صنف" />
-                  <Menu mnemonicParsing="false" text="حركة صنف">
-                    <items>
-                  <MenuItem mnemonicParsing="false" text="حركة بيع وشراء صنف" />
-                      <MenuItem mnemonicParsing="false" onAction="#onItemPriceHistoryClick" text="حركة أسعار صنف" />
-                    </items>
-                  </Menu>
+              <MenuItem mnemonicParsing="false" onAction="#onItemPriceHistoryClick" text="حركة أسعار صنف" />
             <MenuItem onAction="#onItemUpdateClick" mnemonicParsing="false" text="تعديل صنف" />
             <MenuItem onAction="#onItemDeleteClick" mnemonicParsing="false" text="حذف صنف" />
           </items>
@@ -29,11 +24,11 @@
                   <Menu mnemonicParsing="false" text="تقارير">
                     <items>
                       <MenuItem onAction="#onSalesReportsClick" mnemonicParsing="false" text="تقارير بيع" />
-<!--                        <MenuItem mnemonicParsing="false" onAction="#onPurchaseReportsClick" text="تقارير شراء" />-->
-<!--                        <MenuItem mnemonicParsing="false" onAction="#onSalesAndPurchaseReportsClick" text="تقارير بيع وشراء" />-->
+                        <MenuItem mnemonicParsing="false" onAction="#onPurchaseReportsClick" text="تقارير شراء" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSalesAndPurchaseReportsClick" text="تقارير بيع وشراء" />
                     </items>
                   </Menu>
-<!--              <MenuItem mnemonicParsing="false" onAction="#onShowInventoryClick" text="عرض البضاعة" />-->
+              <MenuItem mnemonicParsing="false" onAction="#onShowInventoryClick" text="عرض البضاعة" />
               <MenuItem onAction="#onAddSupplierClick" mnemonicParsing="false" text="إضافة مورد" />
           </items>
         </Menu>
@@ -46,9 +41,9 @@
                   <MenuItem onAction="#onDeleteCustomerClick" mnemonicParsing="false" text="حذف عميل" />
           </items>
         </Menu>
-            <Menu mnemonicParsing="false" text="دفع لحساب">
+            <Menu mnemonicParsing="false" text="نقدى">
                <items>
-                  <MenuItem onAction="#onPaymentNoReceiptClick" mnemonicParsing="false" text="دفع لحساب بدون فاتورة" />
+                  <MenuItem onAction="#onPaymentNoReceiptClick" mnemonicParsing="false" text="إستلام نقدية" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="إدارة سيارة">

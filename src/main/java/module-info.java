@@ -7,6 +7,7 @@ module nasar.mustafa.warehub {
     requires org.mybatis;
     requires org.controlsfx.controls;
     requires java.desktop;
+    requires jasperreports;
 
     opens nasar.mustafa.warehub to javafx.fxml;
     exports nasar.mustafa.warehub;

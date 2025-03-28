@@ -1,139 +1,216 @@
 package nasar.mustafa.warehub.controllers;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
-
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.controlsfx.control.SearchableComboBox;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.util.*;
+import javafx.event.ActionEvent;
 
 public class ShowInventoryController implements Initializable {
 
     @FXML
-    private TextField searchField;
-    
+    private SearchableComboBox<String> itemsCombo;
+
     @FXML
     private TableView<InventoryItem> inventoryTable;
-    
+
     @FXML
-    private TableColumn<InventoryItem, String> itemCodeColumn;
-    
+    private TableColumn<InventoryItem, String> codeColumn;
+
     @FXML
-    private TableColumn<InventoryItem, String> itemNameColumn;
-    
+    private TableColumn<InventoryItem, String> nameColumn;
+
     @FXML
     private TableColumn<InventoryItem, Double> quantityColumn;
-    
+
     @FXML
     private TableColumn<InventoryItem, Double> purchasePriceColumn;
-    
+
     @FXML
-    private TableColumn<InventoryItem, Double> salePriceColumn;
-    
+    private TableColumn<InventoryItem, Double> sellingPriceColumn;
+
     @FXML
     private TableColumn<InventoryItem, Double> totalValueColumn;
-    
+
     @FXML
-    private Label totalItemsLabel;
-    
+    private Label itemCountLabel;
+
     @FXML
     private Label totalValueLabel;
-    
+
     private ObservableList<InventoryItem> allInventoryItems = FXCollections.observableArrayList();
     private ObservableList<InventoryItem> filteredInventoryItems = FXCollections.observableArrayList();
-    
+
+    private Connection connection;
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+        loadInventoryData();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Initialize table columns
-        itemCodeColumn.setCellValueFactory(new PropertyValueFactory<>("itemCode"));
-        itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("itemName"));
+        codeColumn.setCellValueFactory(new PropertyValueFactory<>("itemCode"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("itemName"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         purchasePriceColumn.setCellValueFactory(new PropertyValueFactory<>("purchasePrice"));
-        salePriceColumn.setCellValueFactory(new PropertyValueFactory<>("salePrice"));
+        sellingPriceColumn.setCellValueFactory(new PropertyValueFactory<>("salePrice"));
         totalValueColumn.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
-        
-        // Load inventory data
-        loadInventoryData();
-        
-        // Set up search functionality
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filterInventory(newValue);
+
+        itemsCombo.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            filterInventory(newVal);
         });
     }
-    
+
     private void loadInventoryData() {
-        // TODO: Load from database
-        // For now, add sample data
-        allInventoryItems.addAll(
-            new InventoryItem("ITM001", "صنف 1", 50, 70, 100, 3500),
-            new InventoryItem("ITM002", "صنف 2", 25, 120, 180, 3000),
-            new InventoryItem("ITM003", "صنف 3", 100, 30, 50, 3000),
-            new InventoryItem("ITM004", "صنف 4", 15, 200, 280, 3000)
-        );
-        
-        filteredInventoryItems.addAll(allInventoryItems);
-        inventoryTable.setItems(filteredInventoryItems);
-        
-        updateTotals();
+        allInventoryItems.clear();
+        String query = """
+            SELECT i.id AS item_id, i.name AS item_name,
+                   ip.price_buy, ip.price_sell, ip.stock_quantity,
+                   (ip.price_buy * ip.stock_quantity) AS total_value
+            FROM items i
+            JOIN item_prices ip ON i.id = ip.item_id
+            WHERE ip.effective_date = (
+                SELECT MAX(effective_date)
+                FROM item_prices
+                WHERE item_id = i.id AND (end_date IS NULL OR end_date > CURRENT_TIMESTAMP)
+            )
+            ORDER BY i.name
+            """;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                allInventoryItems.add(new InventoryItem(
+                        "ITM-" + rs.getInt("item_id"),
+                        rs.getString("item_name"),
+                        rs.getDouble("stock_quantity"),
+                        rs.getDouble("price_buy"),
+                        rs.getDouble("price_sell"),
+                        rs.getDouble("total_value")
+                ));
+            }
+            filteredInventoryItems.addAll(allInventoryItems);
+            inventoryTable.setItems(filteredInventoryItems);
+
+            // Populate combo box with product names
+            itemsCombo.getItems().clear();
+            itemsCombo.getItems().addAll(
+                    allInventoryItems.stream()
+                            .map(InventoryItem::getItemName)
+                            .collect(Collectors.toSet())
+            );
+            updateTotals();
+        } catch (SQLException e) {
+            showAlert("Database Error", "Failed to load inventory: " + e.getMessage());
+        }
     }
-    
-    private void filterInventory(String searchText) {
+
+    private void filterInventory(String selectedItem) {
         filteredInventoryItems.clear();
-        
-        if (searchText == null || searchText.isEmpty()) {
+        if (selectedItem == null || selectedItem.isBlank()) {
             filteredInventoryItems.addAll(allInventoryItems);
         } else {
-            String lowerCaseFilter = searchText.toLowerCase();
-            
             for (InventoryItem item : allInventoryItems) {
-                if (item.getItemCode().toLowerCase().contains(lowerCaseFilter) ||
-                    item.getItemName().toLowerCase().contains(lowerCaseFilter)) {
+                if (item.getItemName().equalsIgnoreCase(selectedItem)) {
                     filteredInventoryItems.add(item);
                 }
             }
         }
-        
         updateTotals();
     }
-    
+
     private void updateTotals() {
-        int totalItems = filteredInventoryItems.size();
+        itemCountLabel.setText(String.valueOf(filteredInventoryItems.size()));
         double totalValue = filteredInventoryItems.stream()
                 .mapToDouble(InventoryItem::getTotalValue)
                 .sum();
-                
-        totalItemsLabel.setText(String.valueOf(totalItems));
         totalValueLabel.setText(String.format("%.2f", totalValue));
     }
-    
-    @FXML
-    private void onExportInventory() {
-        // TODO: Implement export functionality
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("تصدير المخزون");
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText("سيتم تصدير تقرير المخزون قريباً");
+        alert.setContentText(content);
         alert.showAndWait();
     }
-    
+
     @FXML
-    private void onPrintInventory() {
-        // TODO: Implement print functionality
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("طباعة المخزون");
-        alert.setHeaderText(null);
-        alert.setContentText("سيتم طباعة تقرير المخزون قريباً");
-        alert.showAndWait();
+    private void onExportPDF(ActionEvent event) {
+        if (inventoryTable.getItems().isEmpty()) {
+            showAlert("No inventory items to export", String.valueOf(Alert.AlertType.WARNING));
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF File");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        File file = fileChooser.showSaveDialog(inventoryTable.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                JasperReport jasperReport = JasperCompileManager.compileReport(
+                        getClass().getResourceAsStream("/nasar/mustafa/warehub/Jasper/ShowInventory.jrxml"));
+
+                List<Map<String, Object>> dataList = new ArrayList<>();
+                for (InventoryItem item : inventoryTable.getItems()) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", item.getItemCode());
+                    map.put("name", item.getItemName());
+                    map.put("quantity", item.getQuantity());
+                    map.put("purchase_price", item.getPurchasePrice());
+                    map.put("selling_price", item.getSalePrice());
+                    map.put("total_value", item.getTotalValue());
+                    dataList.add(map);
+                }
+                JRDataSource dataSource = new JRBeanCollectionDataSource(dataList);
+
+                String totalValueText = totalValueLabel.getText().replace(",", "");
+                double totalValue = Double.parseDouble(totalValueText);
+
+                String itemCountText = itemCountLabel.getText();
+                int itemCount = Integer.parseInt(itemCountText);
+
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("TotalValues", totalValue);
+                parameters.put("NoItems", itemCount);
+
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("PDF Exported Successfully");
+                alert.showAndWait();
+
+            } catch (JRException e) {
+                showAlert("Error exporting PDF: " + e.getMessage(), String.valueOf(Alert.AlertType.ERROR));
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                showAlert("Invalid number format: " + e.getMessage(), String.valueOf(Alert.AlertType.ERROR));
+                e.printStackTrace();
+            }
+        }
     }
-    
-    // Model class for inventory items
+
     public static class InventoryItem {
         private final String itemCode;
         private final String itemName;
@@ -141,9 +218,9 @@ public class ShowInventoryController implements Initializable {
         private final double purchasePrice;
         private final double salePrice;
         private final double totalValue;
-        
-        public InventoryItem(String itemCode, String itemName, double quantity, 
-                           double purchasePrice, double salePrice, double totalValue) {
+
+        public InventoryItem(String itemCode, String itemName, double quantity,
+                             double purchasePrice, double salePrice, double totalValue) {
             this.itemCode = itemCode;
             this.itemName = itemName;
             this.quantity = quantity;
@@ -151,7 +228,6 @@ public class ShowInventoryController implements Initializable {
             this.salePrice = salePrice;
             this.totalValue = totalValue;
         }
-        
         public String getItemCode() { return itemCode; }
         public String getItemName() { return itemName; }
         public double getQuantity() { return quantity; }

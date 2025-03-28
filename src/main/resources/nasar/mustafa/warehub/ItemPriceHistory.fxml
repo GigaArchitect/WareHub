@@ -1,40 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.ItemPriceHistoryController">
-   <left>
-      <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="150.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="collect" layoutX="28.0" layoutY="46.0" mnemonicParsing="false" onAction="#onItemSelect" prefHeight="27.0" prefWidth="95.0" text="تجميع" />
-            <Button fx:id="print" layoutX="28.0" layoutY="107.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="95.0" text="طباعة" />
-         </children>
-      </Pane>
-   </left>
-   <center>
-      <TableView fx:id="tablePriceHistory" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" prefHeight="400.0" prefWidth="617.0" stylesheets="@style.css" BorderPane.alignment="TOP_RIGHT">
-        <columns>
-          <TableColumn fx:id="idColumn" prefWidth="150.0" text="مسلسل" />
-            <TableColumn fx:id="nameColumn" prefWidth="180.0" text="أسم الصنف" />
-            <TableColumn fx:id="priceBuy" minWidth="0.0" prefWidth="148.0" text="سعر الشراء" />
-            <TableColumn fx:id="priceSell" prefWidth="138.0" text="سعر البيع" />
-            <TableColumn fx:id="dateColumn" prefWidth="168.0" text="التاريخ" />
-        </columns>
-      </TableView>
-   </center>
-   <top>
-      <AnchorPane prefHeight="51.0" prefWidth="767.0" BorderPane.alignment="CENTER">
-         <children>
-            <SearchableComboBox fx:id="itemsCombo" layoutX="226.0" layoutY="7.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="26.0" prefWidth="437.0" AnchorPane.rightAnchor="104.0" />
-            <Label contentDisplay="RIGHT" layoutX="663.0" layoutY="7.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="38.0" prefWidth="84.0" stylesheets="@style.css" text="أختر الصنف" textAlignment="RIGHT" AnchorPane.rightAnchor="20.0" />
-         </children>
-      </AnchorPane>
-   </top>
-</BorderPane>
+<VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="739.0" prefWidth="773.0" style="-fx-spacing: 15;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nasar.mustafa.warehub.controllers.ItemPriceHistoryController">
+    <children>
+        <Label style="-fx-padding: 15;" text="حركة أسعار صنف" />
+        <HBox alignment="TOP_CENTER">
+            <children>
+                <SearchableComboBox fx:id="itemsCombo" nodeOrientation="RIGHT_TO_LEFT" prefHeight="26.0" prefWidth="437.0" />
+                <Label contentDisplay="RIGHT" nodeOrientation="RIGHT_TO_LEFT" prefHeight="38.0" prefWidth="84.0" stylesheets="@style.css" text="أختر الصنف" textAlignment="RIGHT" />
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 15;">
+            <children>
+                <Label text="من تاريخ" />
+                <DatePicker fx:id="fromDatePicker" />
+                <Label text="إلى تاريخ" />
+                <DatePicker fx:id="toDatePicker" />
+            </children>
+        </HBox>
+        <HBox alignment="TOP_CENTER" style="-fx-spacing: 15;">
+            <children>
+                <Button fx:id="print" mnemonicParsing="false" prefHeight="37.0" prefWidth="144.0" onAction="#onExportPDF" text="تصدير كملف PDF" />
+                <Button fx:id="collect" mnemonicParsing="false" onAction="#onItemSelect" prefHeight="27.0" prefWidth="95.0" text="تجميع" />
+            </children>
+        </HBox>
+        <TabPane nodeOrientation="RIGHT_TO_LEFT" prefHeight="451.0" prefWidth="773.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="جدول البيانات">
+                    <content>
+                        <TableView fx:id="tablePriceHistory" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" prefHeight="400.0" prefWidth="602.0" stylesheets="@style.css">
+                            <columns>
+                                <TableColumn fx:id="idColumn" prefWidth="102.0" text="مسلسل" />
+                                <TableColumn fx:id="nameColumn" prefWidth="182.0" text="أسم الصنف" />
+                                <TableColumn fx:id="priceBuy" minWidth="0.0" prefWidth="121.0" text="سعر الشراء" />
+                                <TableColumn fx:id="priceSell" prefWidth="136.0" text="سعر البيع" />
+                                <TableColumn fx:id="dateColumn" prefWidth="231.0" text="التاريخ" />
+                            </columns>
+                        </TableView>
+                    </content>
+                </Tab>
+                <Tab text="الرسم البيانى">
+                    <content>
+                        <LineChart fx:id="lineChart" prefHeight="247.0" prefWidth="773.0">
+                            <xAxis>
+                                <CategoryAxis side="BOTTOM" />
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis side="LEFT" />
+                            </yAxis>
+                        </LineChart>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</VBox>

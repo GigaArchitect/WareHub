@@ -6,6 +6,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.controlsfx.control.SearchableComboBox;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.util.*;
+import javafx.event.ActionEvent;
 
 import javafx.scene.control.TextField;
 import java.sql.Connection;
@@ -92,6 +98,71 @@ public class ShowVehicleExpensesController {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error fetching expenses from the database: " + e.getMessage());
             alert.showAndWait();
         }
+    }
+
+    @FXML
+    private void onExportPDF(ActionEvent event) {
+        if (expensesTableView.getItems().isEmpty()) {
+            showAlert("No expenses to export", Alert.AlertType.WARNING);
+            return;
+        }
+
+        String selectedVehicle = (String) selectCarsCombo.getValue();
+        if (selectedVehicle == null || selectedVehicle.isEmpty()) {
+            showAlert("Please select a vehicle", Alert.AlertType.WARNING);
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF File");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        File file = fileChooser.showSaveDialog(expensesTableView.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                // Load the report template
+                JasperReport jasperReport = JasperCompileManager.compileReport(
+                        getClass().getResourceAsStream("/nasar/mustafa/warehub/Jasper/ShowVehicleExpenses.jrxml"));
+
+                // Create data source from expenses items
+                List<Map<String, Object>> dataList = new ArrayList<>();
+                for (CarExpensesRow item : expensesTableView.getItems()) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", item.getExpenseId());
+                    map.put("expense_name", item.getExpenseName());
+                    map.put("amount", item.getExpensePrice());
+                    map.put("date", item.getExpenseDate()); // Ensure date is in yyyy-MM-dd format
+                    dataList.add(map);
+                }
+                JRDataSource dataSource = new JRBeanCollectionDataSource(dataList);
+
+                // Get total value from the totalExpensesField
+                String totalText = totalExpensesField.getText().replace(",", "");
+                double totalValue = Double.parseDouble(totalText);
+
+                // Set parameters
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("TotalValue", totalValue);
+
+                // Fill and export the report
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+
+                showAlert("PDF exported successfully", Alert.AlertType.INFORMATION);
+            } catch (JRException e) {
+                showAlert("Error exporting PDF: " + e.getMessage(), Alert.AlertType.ERROR);
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                showAlert("Invalid date format: " + e.getMessage(), Alert.AlertType.ERROR);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void showAlert(String noExpensesToExport, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType, noExpensesToExport);
+        alert.showAndWait();
     }
 
 

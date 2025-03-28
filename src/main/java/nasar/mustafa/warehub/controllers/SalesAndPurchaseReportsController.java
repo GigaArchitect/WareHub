@@ -1,205 +1,210 @@
 package nasar.mustafa.warehub.controllers;
-
-import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.net.URL;
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class SalesAndPurchaseReportsController implements Initializable {
 
-    @FXML
-    private DatePicker fromDatePicker;
-    
-    @FXML
-    private DatePicker toDatePicker;
-    
-    @FXML
-    private ComboBox<String> itemComboBox;
-    
-    @FXML
-    private BarChart<String, Number> comparisonChart;
-    
-    @FXML
-    private CategoryAxis xAxis;
-    
-    @FXML
-    private NumberAxis yAxis;
-    
-    @FXML
-    private TableView<TransactionRecord> transactionsTable;
-    
-    @FXML
-    private TableColumn<TransactionRecord, LocalDate> dateColumn;
-    
-    @FXML
-    private TableColumn<TransactionRecord, String> typeColumn;
-    
-    @FXML
-    private TableColumn<TransactionRecord, String> itemColumn;
-    
-    @FXML
-    private TableColumn<TransactionRecord, Double> quantityColumn;
-    
-    @FXML
-    private TableColumn<TransactionRecord, Double> priceColumn;
-    
-    @FXML
-    private TableColumn<TransactionRecord, Double> totalColumn;
-    
-    @FXML
-    private Label totalSalesLabel;
-    
-    @FXML
-    private Label totalPurchasesLabel;
-    
-    @FXML
-    private Label netProfitLabel;
-    
-    private ObservableList<TransactionRecord> transactionsData = FXCollections.observableArrayList();
-    
+    @FXML private DatePicker fromDatePicker;
+    @FXML private DatePicker toDatePicker;
+    @FXML private ComboBox<String> reportTypeComboBox;
+    @FXML private TableView<ReportRecord> reportTable;
+    @FXML private TableColumn<ReportRecord, LocalDate> dateColumn;
+    @FXML private TableColumn<ReportRecord, Double> salesColumn;
+    @FXML private TableColumn<ReportRecord, Double> purchasesColumn;
+    @FXML private TableColumn<ReportRecord, Double> profitColumn;
+    @FXML private BarChart<String, Number> reportChart;
+    @FXML private Label totalSalesLabel;
+    @FXML private Label totalPurchasesLabel;
+    @FXML private Label netProfitLabel;
+
+    private Connection connection;
+    private final ObservableList<ReportRecord> reportData = FXCollections.observableArrayList();
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+        loadInitialData();
+    }
+
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Initialize date pickers
+    public void initialize(URL url, ResourceBundle rb) {
+        setupDatePickers();
+        setupTableColumns();
+        setupReportTypes();
+        reportTable.setItems(reportData);
+    }
+
+    private void setupDatePickers() {
         fromDatePicker.setValue(LocalDate.now().minusMonths(1));
         toDatePicker.setValue(LocalDate.now());
-        
-        // Initialize table columns
+    }
+
+    private void setupTableColumns() {
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-        itemColumn.setCellValueFactory(new PropertyValueFactory<>("item"));
-        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
-        
-        // Set table data
-        transactionsTable.setItems(transactionsData);
-        
-        // Load items
-        loadItems();
-        
-        // Configure chart
-        xAxis.setLabel("التاريخ");
-        yAxis.setLabel("القيمة");
+        salesColumn.setCellValueFactory(new PropertyValueFactory<>("sales"));
+        purchasesColumn.setCellValueFactory(new PropertyValueFactory<>("purchases"));
+        profitColumn.setCellValueFactory(new PropertyValueFactory<>("profit"));
     }
-    
-    private void loadItems() {
-        // TODO: Load from database
-        ObservableList<String> items = FXCollections.observableArrayList(
-            "الكل", "صنف 1", "صنف 2", "صنف 3"
-        );
-        itemComboBox.setItems(items);
-        itemComboBox.setValue("الكل");
+
+    private void setupReportTypes() {
+        reportTypeComboBox.setItems(FXCollections.observableArrayList(
+                "يومي", "شهري", "سنوي"
+        ));
+        reportTypeComboBox.setValue("يومي");
     }
-    
+
+    private void loadInitialData() {
+        if (connection == null) return;
+        onGenerateReport();
+    }
+
     @FXML
     private void onGenerateReport() {
-        // Clear previous data
-        transactionsData.clear();
-        comparisonChart.getData().clear();
-        
-        // TODO: Fetch sales and purchase data from database based on filters
-        // For now, add sample data
-        transactionsData.addAll(
-            new TransactionRecord(LocalDate.now().minusDays(10), "شراء", "صنف 1", 20, 70, 1400),
-            new TransactionRecord(LocalDate.now().minusDays(8), "بيع", "صنف 1", 5, 100, 500),
-            new TransactionRecord(LocalDate.now().minusDays(5), "شراء", "صنف 2", 10, 120, 1200),
-            new TransactionRecord(LocalDate.now().minusDays(3), "بيع", "صنف 1", 8, 100, 800),
-            new TransactionRecord(LocalDate.now().minusDays(1), "بيع", "صنف 2", 4, 180, 720)
-        );
-        
-        // Calculate totals
-        double totalSales = transactionsData.stream()
-                .filter(record -> record.getType().equals("بيع"))
-                .mapToDouble(TransactionRecord::getTotal)
-                .sum();
-                
-        double totalPurchases = transactionsData.stream()
-                .filter(record -> record.getType().equals("شراء"))
-                .mapToDouble(TransactionRecord::getTotal)
-                .sum();
-                
-        double netProfit = totalSales - totalPurchases;
-        
-        // Update labels
-        totalSalesLabel.setText(String.format("%.2f", totalSales));
-        totalPurchasesLabel.setText(String.format("%.2f", totalPurchases));
-        netProfitLabel.setText(String.format("%.2f", netProfit));
-        
-        // Update chart
-        XYChart.Series<String, Number> salesSeries = new XYChart.Series<>();
-        salesSeries.setName("المبيعات");
-        
-        XYChart.Series<String, Number> purchasesSeries = new XYChart.Series<>();
-        purchasesSeries.setName("المشتريات");
-        
-        // Group by date for chart
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        
-        transactionsData.stream()
-                .filter(record -> record.getType().equals("بيع"))
-                .forEach(record -> 
-                    salesSeries.getData().add(new XYChart.Data<>(record.getDate().format(formatter), record.getTotal()))
-                );
-                
-        transactionsData.stream()
-                .filter(record -> record.getType().equals("شراء"))
-                .forEach(record -> 
-                    purchasesSeries.getData().add(new XYChart.Data<>(record.getDate().format(formatter), record.getTotal()))
-                );
-        
-        comparisonChart.getData().addAll(salesSeries, purchasesSeries);
+        reportData.clear();
+        reportChart.getData().clear();
+
+        String groupBy = switch (reportTypeComboBox.getValue()) {
+            case "شهري" -> "strftime('%Y-%m', ";
+            case "سنوي" -> "strftime('%Y', ";
+            default -> "DATE("; // يومي
+        };
+
+        String datePattern = switch (reportTypeComboBox.getValue()) {
+            case "شهري" -> "%Y-%m";
+            case "سنوي" -> "%Y";
+            default -> "%Y-%m-%d"; // يومي
+        };
+
+        String salesQuery = String.format("""
+        SELECT strftime('%s', s.sale_date) as date, COALESCE(SUM(si.total_price), 0) as total
+        FROM sales s
+        JOIN sales_items si ON s.id = si.sale_id
+        WHERE DATE(s.sale_date) BETWEEN DATE(?) AND DATE(?)
+        GROUP BY strftime('%s', s.sale_date)
+        ORDER BY date
+        """, datePattern, datePattern);
+
+        String purchasesQuery = String.format("""
+        SELECT strftime('%s', p.purchase_date) as date, COALESCE(SUM(pi.total_cost), 0) as total
+        FROM purchases p
+        JOIN purchase_items pi ON p.id = pi.purchase_id
+        WHERE DATE(p.purchase_date) BETWEEN DATE(?) AND DATE(?)
+        GROUP BY strftime('%s', p.purchase_date)
+        ORDER BY date
+        """, datePattern, datePattern);
+
+        try {
+            var salesSeries = new XYChart.Series<String, Number>();
+            salesSeries.setName("المبيعات");
+
+            var purchasesSeries = new XYChart.Series<String, Number>();
+            purchasesSeries.setName("المشتريات");
+
+            double totalSales = 0;
+            double totalPurchases = 0;
+
+            var salesData = new HashMap<String, Double>();
+            var purchasesData = new HashMap<String, Double>();
+
+            try (PreparedStatement stmt = connection.prepareStatement(salesQuery)) {
+                stmt.setString(1, fromDatePicker.getValue().toString());
+                stmt.setString(2, toDatePicker.getValue().toString());
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    String date = rs.getString("date");
+                    double total = rs.getDouble("total");
+                    salesData.put(date, total);
+                    totalSales += total;
+                }
+            }
+
+            try (PreparedStatement stmt = connection.prepareStatement(purchasesQuery)) {
+                stmt.setString(1, fromDatePicker.getValue().toString());
+                stmt.setString(2, toDatePicker.getValue().toString());
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    String date = rs.getString("date");
+                    double total = rs.getDouble("total");
+                    purchasesData.put(date, total);
+                    totalPurchases += total;
+                }
+            }
+
+            Set<String> allDates = new TreeSet<>();
+            allDates.addAll(salesData.keySet());
+            allDates.addAll(purchasesData.keySet());
+
+            for (String dateStr : allDates) {
+                double sales = salesData.getOrDefault(dateStr, 0.0);
+                double purchases = purchasesData.getOrDefault(dateStr, 0.0);
+
+                LocalDate date = switch (reportTypeComboBox.getValue()) {
+                    case "شهري" -> LocalDate.parse(dateStr + "-01");
+                    case "سنوي" -> LocalDate.parse(dateStr + "-01-01");
+                    default -> LocalDate.parse(dateStr); // يومي
+                };
+
+                reportData.add(new ReportRecord(date, sales, purchases));
+                salesSeries.getData().add(new XYChart.Data<>(dateStr, sales));
+                purchasesSeries.getData().add(new XYChart.Data<>(dateStr, purchases));
+            }
+
+            reportChart.getData().addAll(salesSeries, purchasesSeries);
+
+            double netProfit = totalSales - totalPurchases;
+            totalSalesLabel.setText(String.format("%,.2f", totalSales));
+            totalPurchasesLabel.setText(String.format("%,.2f", totalPurchases));
+            netProfitLabel.setText(String.format("%,.2f", netProfit));
+
+        } catch (SQLException e) {
+            showAlert("خطأ", "فشل في تحميل البيانات: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
-    
+
     @FXML
     private void onExportReport() {
-        // TODO: Implement export functionality
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("تصدير التقرير");
+        showAlert("تنبيه", "سيتم تنفيذ التصدير قريباً", Alert.AlertType.INFORMATION);
+    }
+
+    private void showAlert(String title, String content, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText("سيتم تصدير التقرير قريباً");
+        alert.setContentText(content);
         alert.showAndWait();
     }
-    
-    // Model class for transaction records
-    public static class TransactionRecord {
+
+    public static class ReportRecord {
         private final LocalDate date;
-        private final String type;
-        private final String item;
-        private final double quantity;
-        private final double price;
-        private final double total;
-        
-        public TransactionRecord(LocalDate date, String type, String item, 
-                               double quantity, double price, double total) {
+        private final double sales;
+        private final double purchases;
+        private final double profit;
+
+        public ReportRecord(LocalDate date, double sales, double purchases) {
             this.date = date;
-            this.type = type;
-            this.item = item;
-            this.quantity = quantity;
-            this.price = price;
-            this.total = total;
+            this.sales = sales;
+            this.purchases = purchases;
+            this.profit = sales - purchases;
         }
-        
+
         public LocalDate getDate() { return date; }
-        public String getType() { return type; }
-        public String getItem() { return item; }
-        public double getQuantity() { return quantity; }
-        public double getPrice() { return price; }
-        public double getTotal() { return total; }
+        public double getSales() { return sales; }
+        public double getPurchases() { return purchases; }
+        public double getProfit() { return profit; }
     }
 }
