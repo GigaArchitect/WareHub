@@ -1,4 +1,5 @@
 package nasar.mustafa.warehub.controllers;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,7 +13,6 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
-
 
 import java.sql.*;
 
@@ -56,28 +56,28 @@ public class AddCustomerReceiptController {
 
     @FXML
     private Button addItemButton;
-    
+
     @FXML
     private Button deleteItemButton;
-    
+
     @FXML
     private Button registerReceiptButton;
 
     @FXML
     private ComboBox<String> available_prices;
 
-    public void setCustomerCombo(String value){
-	this.customerCombo.setValue(value);
+    public void setCustomerCombo(String value) {
+        this.customerCombo.setValue(value);
     }
 
-    public void disableViewButtons(){
-	this.addItemButton.setDisable(true);
-	this.deleteItemButton.setDisable(true);
-	this.registerReceiptButton.setDisable(true);
+    public void disableViewButtons() {
+        this.addItemButton.setDisable(true);
+        this.deleteItemButton.setDisable(true);
+        this.registerReceiptButton.setDisable(true);
     }
 
-    public void setTotalValueField(String value){
-	totalField.setText(value);
+    public void setTotalValueField(String value) {
+        totalField.setText(value);
     }
 
     @FXML
@@ -107,8 +107,7 @@ public class AddCustomerReceiptController {
             PreparedStatement stmt = connection.prepareStatement(
                     "SELECT ip.price_sell, ip.stock_quantity FROM item_prices ip " +
                             "INNER JOIN items i ON ip.item_id = i.id " +
-                            "WHERE i.name = ? ORDER BY ip.effective_date DESC"
-            );
+                            "WHERE i.name = ? ORDER BY ip.effective_date DESC");
             stmt.setString(1, itemName);
             ResultSet rs = stmt.executeQuery();
 
@@ -128,8 +127,7 @@ public class AddCustomerReceiptController {
             PreparedStatement stmt = connection.prepareStatement(
                     "SELECT ip.stock_quantity FROM item_prices ip " +
                             "INNER JOIN items i ON ip.item_id = i.id " +
-                            "WHERE ip.price_sell = ? ORDER BY ip.effective_date DESC LIMIT 1"
-            );
+                            "WHERE ip.price_sell = ? ORDER BY ip.effective_date DESC LIMIT 1");
             stmt.setDouble(1, Double.parseDouble(selectedPrice));
             ResultSet rs = stmt.executeQuery();
 
@@ -156,7 +154,8 @@ public class AddCustomerReceiptController {
             int quantity;
             try {
                 quantity = Integer.parseInt(quantityField.getText());
-                if (quantity <= 0) throw new NumberFormatException();
+                if (quantity <= 0)
+                    throw new NumberFormatException();
             } catch (NumberFormatException e) {
                 showAlert("Please enter a valid quantity", Alert.AlertType.WARNING);
                 return;
@@ -165,8 +164,7 @@ public class AddCustomerReceiptController {
             PreparedStatement stmt = connection.prepareStatement(
                     "SELECT ip.price_sell, ip.price_buy, ip.stock_quantity FROM item_prices ip " +
                             "INNER JOIN items i ON ip.item_id = i.id " +
-                            "WHERE i.name = ? ORDER BY ip.effective_date DESC LIMIT 1"
-            );
+                            "WHERE i.name = ? ORDER BY ip.effective_date DESC LIMIT 1");
             stmt.setString(1, selectedItem);
             ResultSet rs = stmt.executeQuery();
 
@@ -215,8 +213,7 @@ public class AddCustomerReceiptController {
             connection.setAutoCommit(false);
 
             PreparedStatement customerStmt = connection.prepareStatement(
-                    "SELECT id FROM customers WHERE name = ?"
-            );
+                    "SELECT id FROM customers WHERE name = ?");
             customerStmt.setString(1, selectedCustomer);
             ResultSet customerRs = customerStmt.executeQuery();
 
@@ -228,8 +225,7 @@ public class AddCustomerReceiptController {
             // Create sale record
             PreparedStatement saleStmt = connection.prepareStatement(
                     "INSERT INTO sales (customer_id, total_price) VALUES (?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
+                    Statement.RETURN_GENERATED_KEYS);
             saleStmt.setInt(1, customerId);
             String totalText = totalField.getText().replace(",", "");
             saleStmt.setDouble(2, Double.parseDouble(totalText));
@@ -243,8 +239,7 @@ public class AddCustomerReceiptController {
 
             for (ReceiptItem item : receiptItems) {
                 PreparedStatement itemStmt = connection.prepareStatement(
-                        "SELECT id FROM items WHERE name = ?"
-                );
+                        "SELECT id FROM items WHERE name = ?");
                 itemStmt.setString(1, item.getItemName());
                 ResultSet itemRs = itemStmt.executeQuery();
                 if (!itemRs.next()) {
@@ -253,8 +248,7 @@ public class AddCustomerReceiptController {
                 int itemId = itemRs.getInt("id");
 
                 PreparedStatement saleItemStmt = connection.prepareStatement(
-                        "INSERT INTO sales_items (sale_id, item_id, quantity, unit_price, unit_price_buy, total_price) VALUES (?, ?, ?, ?, ?, ?)"
-                );
+                        "INSERT INTO sales_items (sale_id, item_id, quantity, unit_price, unit_price_buy, total_price) VALUES (?, ?, ?, ?, ?, ?)");
                 saleItemStmt.setInt(1, saleId);
                 saleItemStmt.setInt(2, itemId);
                 saleItemStmt.setInt(3, item.getQuantity());
@@ -264,8 +258,7 @@ public class AddCustomerReceiptController {
 
                 PreparedStatement updateStockStmt = connection.prepareStatement(
                         "UPDATE item_prices SET stock_quantity = stock_quantity - ? " +
-                                "WHERE item_id = ? AND effective_date = (SELECT MAX(effective_date) FROM item_prices WHERE item_id = ?)"
-                );
+                                "WHERE item_id = ? AND effective_date = (SELECT MAX(effective_date) FROM item_prices WHERE item_id = ?)");
                 updateStockStmt.setInt(1, item.getQuantity());
                 updateStockStmt.setInt(2, itemId);
                 updateStockStmt.setInt(3, itemId);
@@ -292,8 +285,7 @@ public class AddCustomerReceiptController {
                     "SELECT i.name, i.id ,si.quantity, si.unit_price, (si.quantity * si.unit_price) AS total_price " +
                             "FROM sales_items si " +
                             "INNER JOIN items i ON si.item_id = i.id " +
-                            "WHERE si.sale_id = ?"
-            );
+                            "WHERE si.sale_id = ?");
             stmt.setInt(1, saleId);
             ResultSet rs = stmt.executeQuery();
 
@@ -307,15 +299,16 @@ public class AddCustomerReceiptController {
                 receiptItems.add(new ReceiptItem(itemName, quantity, unitPrice, totalPrice, itemId));
             }
             receiptTable.setItems(receiptItems);
-	    this.receiptItems = receiptItems;
+            this.receiptItems = receiptItems;
 
-	    // form info
-	    PreparedStatement formInfo = connection.prepareStatement("SELECT sales.total_price, customers.name FROM sales "+
-								     "INNER JOIN customers ON sales.customer_id = customers.id WHERE sales.id = ?");
-	    formInfo.setInt(1, saleId);
-	    rs = formInfo.executeQuery();
-	    setTotalValueField(rs.getString("total_price"));
-	    setCustomerCombo(rs.getString("name"));
+            // form info
+            PreparedStatement formInfo = connection
+                    .prepareStatement("SELECT sales.total_price, customers.name FROM sales " +
+                            "INNER JOIN customers ON sales.customer_id = customers.id WHERE sales.id = ?");
+            formInfo.setInt(1, saleId);
+            rs = formInfo.executeQuery();
+            setTotalValueField(rs.getString("total_price"));
+            setCustomerCombo(rs.getString("name"));
 
         } catch (SQLException e) {
             showAlert("Error loading receipt data: " + e.getMessage(), Alert.AlertType.ERROR);

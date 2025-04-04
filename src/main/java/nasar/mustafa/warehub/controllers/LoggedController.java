@@ -203,4 +203,22 @@ public class LoggedController {
         showInventoryController.setConnection(connection);
         rootPane.setCenter(showInventoryPane);
     }
+
+    @FXML
+    protected void onSupplierAccountStatementClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/SupplierAccountStatement.fxml"));
+        Node supplierAccountStatementPane = loader.load();
+        SupplierAccountStatementController supplierAccountStatementController = loader.getController();
+        supplierAccountStatementController.setConnection(connection);
+        rootPane.setCenter(supplierAccountStatementPane);
+    }
+
+    @FXML
+    protected void onSupplierPaymentNoReceiptClick(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/nasar/mustafa/warehub/SupplierPaymentNoReceipt.fxml"));
+        Node supplierPaymentNoReceiptPane = loader.load();
+        SupplierPaymentNoReceiptController supplierPaymentNoReceiptController = loader.getController();
+        supplierPaymentNoReceiptController.setConnection(connection);
+        rootPane.setCenter(supplierPaymentNoReceiptPane);
+    }
 }

@@ -92,6 +92,7 @@ public class PaymentNoReceiptController {
             connection.commit();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Payment Inserted", ButtonType.OK);
             alert.showAndWait();
+            updateDebtLabel(customer);
 
         } catch (Exception e) {
             try {

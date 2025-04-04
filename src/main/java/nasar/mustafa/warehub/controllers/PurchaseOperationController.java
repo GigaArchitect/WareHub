@@ -3,11 +3,16 @@ package nasar.mustafa.warehub.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import org.controlsfx.control.SearchableComboBox;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
@@ -20,7 +25,12 @@ public class PurchaseOperationController implements Initializable {
     @FXML private TableColumn<PurchaseItem, Integer> quantityColumn;
     @FXML private TableColumn<PurchaseItem, Double> priceColumn;
     @FXML private TableColumn<PurchaseItem, Double> totalColumn;
-    @FXML private TextField totalAmountField;
+    @FXML private Label totalAmountLabel;
+    @FXML private Button addItemButton;
+    @FXML private Button saveButton;
+    @FXML private Button deleteButton;
+    @FXML private Button printButton;
+
 
     private Connection connection;
     private final ObservableList<PurchaseItem> purchaseItems = FXCollections.observableArrayList();
@@ -36,6 +46,13 @@ public class PurchaseOperationController implements Initializable {
         totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
 
         purchaseItemsTable.setItems(purchaseItems);
+
+        purchaseItemsTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && purchaseItemsTable.getSelectionModel().getSelectedItem() != null) {
+                PurchaseItem selectedItem = purchaseItemsTable.getSelectionModel().getSelectedItem();
+                loadPurchaseData(selectedItem.getItemId());
+            }
+        });
     }
 
     public void setConnection(Connection connection) {
@@ -97,52 +114,52 @@ public class PurchaseOperationController implements Initializable {
 
         purchaseItems.add(new PurchaseItem(selectedItem.id, selectedItem.name, quantity, price, total));
         totalAmount += total;
-        totalAmountField.setText(String.format("%,.2f", totalAmount));
+        totalAmountLabel.setText(String.format("%,.2f", totalAmount));
 
         clearItemInputs();
     }
 
-@FXML
-private void onSavePurchase() {
-    if (!validatePurchase()) return;
+    @FXML
+    private void onSavePurchase() {
+        if (!validatePurchase()) return;
 
-    try {
-        connection.setAutoCommit(false);
+        try {
+            connection.setAutoCommit(false);
 
-        String purchaseQuery = "INSERT INTO purchases (supplier_id, total_cost) VALUES (?, ?)";
-        try (PreparedStatement pstmt = connection.prepareStatement(purchaseQuery, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setInt(1, supplierComboBox.getValue().id);
-            pstmt.setDouble(2, totalAmount);
-            pstmt.executeUpdate();
+            String purchaseQuery = "INSERT INTO purchases (supplier_id, total_cost) VALUES (?, ?)";
+            try (PreparedStatement pstmt = connection.prepareStatement(purchaseQuery, Statement.RETURN_GENERATED_KEYS)) {
+                pstmt.setInt(1, supplierComboBox.getValue().id);
+                pstmt.setDouble(2, totalAmount);
+                pstmt.executeUpdate();
 
-            ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()) {
-                int purchaseId = rs.getInt(1);
-                savePurchaseItems(purchaseId);
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    int purchaseId = rs.getInt(1);
+                    savePurchaseItems(purchaseId);
 
-                // Update item prices
-                updateItemPrices();
+                    // Update item prices
+                    updateItemPrices();
 
-                connection.commit();
-                showAlert("Success", "Purchase saved successfully", Alert.AlertType.INFORMATION);
-                clearForm();
+                    connection.commit();
+                    showAlert("Success", "Purchase saved successfully", Alert.AlertType.INFORMATION);
+                    clearForm();
+                }
+            }
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            showAlert("Error", "Failed to save purchase: " + e.getMessage(), Alert.AlertType.ERROR);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-    } catch (SQLException e) {
-        try {
-            connection.rollback();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        showAlert("Error", "Failed to save purchase: " + e.getMessage(), Alert.AlertType.ERROR);
-    } finally {
-        try {
-            connection.setAutoCommit(true);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
-}
 
     @FXML
     private void onDeleteItem() {
@@ -154,7 +171,7 @@ private void onSavePurchase() {
 
         totalAmount -= selectedItem.getTotal();
         purchaseItems.remove(selectedItem);
-        totalAmountField.setText(String.format("%,.2f", totalAmount));
+        totalAmountLabel.setText(String.format("%,.2f", totalAmount));
     }
 
     private void updateItemPrices() throws SQLException {
@@ -231,7 +248,7 @@ private void onSavePurchase() {
         clearItemInputs();
         purchaseItems.clear();
         totalAmount = 0.0;
-        totalAmountField.setText(String.format("%,.2f", 0.0));
+        totalAmountLabel.setText(String.format("%,.2f", 0.0));
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {
@@ -240,6 +257,56 @@ private void onSavePurchase() {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    public void loadPurchaseData(int purchaseId) {
+        try {
+            // Load purchase items
+            String query = "SELECT pi.item_id, i.name, pi.quantity, pi.unit_price, pi.total_cost, s.id as supplier_id, s.name as supplier_name " +
+                    "FROM purchase_items pi " +
+                    "JOIN items i ON pi.item_id = i.id " +
+                    "JOIN purchases p ON pi.purchase_id = p.id " +
+                    "JOIN suppliers s ON p.supplier_id = s.id " +
+                    "WHERE p.id = ?";
+
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, purchaseId);
+            ResultSet rs = stmt.executeQuery();
+
+            purchaseItems.clear();
+            totalAmount = 0.0;
+
+            // Set supplier
+            if (rs.next()) {
+                Supplier supplier = new Supplier(rs.getInt("supplier_id"), rs.getString("supplier_name"));
+                supplierComboBox.setValue(supplier);
+
+                do {
+                    int itemId = rs.getInt("item_id");
+                    String itemName = rs.getString("name");
+                    int quantity = rs.getInt("quantity");
+                    double price = rs.getDouble("unit_price");
+                    double total = rs.getDouble("total_cost");
+
+                    purchaseItems.add(new PurchaseItem(itemId, itemName, quantity, price, total));
+                    totalAmount += total;
+                } while (rs.next());
+
+                totalAmountLabel.setText(String.format("%,.2f", totalAmount));
+            }
+        } catch (SQLException e) {
+            showAlert("Error", "Error loading purchase data: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    public void disableEditingControls() {
+        supplierComboBox.setDisable(true);
+        itemComboBox.setDisable(true);
+        quantityField.setDisable(true);
+        addItemButton.setDisable(true);
+        saveButton.setDisable(true);
+        deleteButton.setDisable(true);
+        printButton.setDisable(false);
     }
 
     private static class Supplier {
@@ -287,9 +354,24 @@ private void onSavePurchase() {
             this.total = total;
         }
 
-        public String getItemName() { return itemName; }
-        public int getQuantity() { return quantity; }
-        public double getPrice() { return price; }
-        public double getTotal() { return total; }
+        public int getItemId() {
+            return itemId;
+        }
+
+        public String getItemName() {
+            return itemName;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public double getTotal() {
+            return total;
+        }
     }
 }

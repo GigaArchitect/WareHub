@@ -81,6 +81,14 @@ CREATE TABLE IF NOT EXISTS payments (
     FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
+CREATE TABLE IF NOT EXISTS deposits (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    supplier_id INTEGER NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    deposit_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+);
+
 -- 10. Sales Items Table -- sales to customer
 CREATE TABLE IF NOT EXISTS sales_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

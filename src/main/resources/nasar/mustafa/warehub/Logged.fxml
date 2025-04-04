@@ -20,7 +20,6 @@
         </Menu>
         <Menu mnemonicParsing="false" text="المخزن">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#onPurchaseOperationClick" text="عملية شراء" />
                   <Menu mnemonicParsing="false" text="تقارير">
                     <items>
                       <MenuItem onAction="#onSalesReportsClick" mnemonicParsing="false" text="تقارير بيع" />
@@ -29,9 +28,17 @@
                     </items>
                   </Menu>
               <MenuItem mnemonicParsing="false" onAction="#onShowInventoryClick" text="عرض البضاعة" />
-              <MenuItem onAction="#onAddSupplierClick" mnemonicParsing="false" text="إضافة مورد" />
           </items>
         </Menu>
+          <Menu text="الموردين" mnemonicParsing="false">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#onSupplierAccountStatementClick" text="كشف حساب لمورد" />
+                <MenuItem onAction="#onAddSupplierClick" mnemonicParsing="false" text="إضافة مورد" />
+                <MenuItem mnemonicParsing="false" onAction="#onPurchaseOperationClick" text="عملية شراء" />
+<!--                  <MenuItem mnemonicParsing="false" onAction="#onSupplierUpdateClick" text="تعديل بيانات مورد" />-->
+<!--                  <MenuItem mnemonicParsing="false" onAction="#onSupplierDeleteClick" text="حذف مورد" />-->
+            </items>
+          </Menu>
         <Menu mnemonicParsing="false" text="العملاء">
           <items>
             <MenuItem onAction="#onAddCustomerClick" mnemonicParsing="false" text="إضافة عميل" />
@@ -44,6 +51,7 @@
             <Menu mnemonicParsing="false" text="نقدى">
                <items>
                   <MenuItem onAction="#onPaymentNoReceiptClick" mnemonicParsing="false" text="إستلام نقدية" />
+                   <MenuItem onAction="#onSupplierPaymentNoReceiptClick" mnemonicParsing="false" text="دفع لمورد" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="إدارة سيارة">
