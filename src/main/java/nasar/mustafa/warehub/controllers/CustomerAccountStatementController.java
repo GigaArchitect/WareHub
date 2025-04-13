@@ -17,6 +17,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.*;
 import javafx.event.ActionEvent;
 
@@ -24,6 +25,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Supplier;
 
 public class CustomerAccountStatementController {
     @FXML
@@ -139,18 +141,21 @@ public class CustomerAccountStatementController {
             double transactionVolume = 0;
 
             while (rs.next()) {
-                String date = rs.getString("date");
-                String description = rs.getString("description");
-                double amount = rs.getDouble("amount");
-		int id = rs.getInt("id");
+                AccountStatementRow row = new AccountStatementRow();
+                row.setDate(rs.getString("date"));
+                row.setDescription(rs.getString("description"));
+                row.setAmount(rs.getDouble("amount"));
+                row.setId(rs.getInt("id"));
 
-                if (description.equals("بيع")) {
-                    transactionVolume += amount;
-                } else if (description.equals("دفع")) {
-                    paidAmount += -amount;
+                if (row.getDescription().equals("بيع")) {
+                    transactionVolume += row.getAmount();
+                } else if (row.getDescription().equals("دفع")) {
+                    paidAmount += -row.getAmount();
                 }
 
-                accountStatementTable.getItems().add(new AccountStatementRow(date, description, amount, transactionVolume - paidAmount, id));
+                row.setBalance(transactionVolume - paidAmount);
+
+                accountStatementTable.getItems().add(row);
             }
 
             paidAmountField.setText(String.format("%,.2f", paidAmount));
@@ -182,36 +187,36 @@ public class CustomerAccountStatementController {
 
         if (file != null) {
             try {
-                // Load the report template
                 JasperReport jasperReport = JasperCompileManager.compileReport(
                         getClass().getResourceAsStream("/nasar/mustafa/warehub/Jasper/CustomerAccountStatement.jrxml"));
 
-                // Create data source from account statement items
                 List<Map<String, Object>> dataList = new ArrayList<>();
                 for (AccountStatementRow item : accountStatementTable.getItems()) {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("date", item.getDate());
-                    map.put("describe", item.getDescription());
-                    map.put("amount", item.getAmount());
-                    map.put("balance", item.getBalance());
+                    for (Field field : item.getClass().getDeclaredFields()){
+                        String name = field.getName();
+                        map.put(name, item.getClass().getDeclaredField(name).get(item));
+                    }
                     dataList.add(map);
                 }
                 JRDataSource dataSource = new JRBeanCollectionDataSource(dataList);
 
-                // Get total values from the fields
-                String totalPaidText = paidAmountField.getText().replace(",", "");
-                double totalPaid = Double.parseDouble(totalPaidText);
+                Map<String, Supplier<Object>> paramSuppliers = Map.of(
+                        "CustomerName", () -> customerComboBox.getValue(),
+                        "TotalValuePaid", () -> Double.parseDouble(paidAmountField.getText().replace(",", "")),
+                        "TransVolume", () -> Double.parseDouble(transactionVolumeField.getText().replace(",", ""))
+                );
 
-                String transVolumeText = transactionVolumeField.getText().replace(",", "");
-                double transVolume = Double.parseDouble(transVolumeText);
-
-                // Set parameters
                 Map<String, Object> parameters = new HashMap<>();
-                parameters.put("CustomerName", selectedCustomer);
-                parameters.put("TotalValuePaid", totalPaid);
-                parameters.put("TransVolume", transVolume);
+                for (Map.Entry<String, Supplier<Object>> entry : paramSuppliers.entrySet()) {
+                    try {
+                        parameters.put(entry.getKey(), entry.getValue().get());
+                    } catch (Exception e) {
+                        showAlert("Failed to retrieve parameter: " + entry.getKey(), e.getMessage(), Alert.AlertType.ERROR);
+                        return;
+                    }
+                }
 
-                // Fill and export the report
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
                 JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
 
@@ -222,6 +227,9 @@ public class CustomerAccountStatementController {
             } catch (IllegalArgumentException e) {
                 showAlert("Invalid number format: ", e.getMessage(), Alert.AlertType.ERROR);
                 e.printStackTrace();
+            }
+            catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -235,18 +243,30 @@ public class CustomerAccountStatementController {
     }
 
     public static class AccountStatementRow {
-        private final String date;
-        private final String description;
-        private final double amount;
-        private final double balance;
-	private final int id;
+        private String date;
+        private String description;
+        private double amount;
+        private double balance;
+        private int id;
 
-        public AccountStatementRow(String date, String description, double amount, double balance, int id) {
+        public void setDate(String date){
             this.date = date;
+        }
+
+        public void setDescription(String description){
             this.description = description;
+        }
+
+        public void setAmount(double amount){
             this.amount = amount;
+        }
+
+        public void setBalance(double balance){
             this.balance = balance;
-	    this.id = id;
+        }
+
+        public void setId(int id){
+            this.id = id;
         }
 
         public String getDate() {
@@ -268,6 +288,5 @@ public class CustomerAccountStatementController {
         public int getId() {
             return id;
         }
-
     }
 }

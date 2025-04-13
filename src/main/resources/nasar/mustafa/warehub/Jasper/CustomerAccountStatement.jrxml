@@ -7,7 +7,7 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="describe" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
 	<field name="amount" class="java.lang.Double"/>
 	<field name="balance" class="java.lang.Double"/>
 	<field name="date" class="java.lang.String"/>
@@ -61,7 +61,7 @@
 					<rightPen lineWidth="1.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[describe]]></text>
+				<text><![CDATA[description]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="141" y="0" width="138" height="30" uuid="2a921458-aee7-4920-a2a6-ec233ce6a9ea">
@@ -123,7 +123,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="NewFontFamily"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{describe}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="141" y="0" width="138" height="30" uuid="53e72854-bfc2-480a-8012-cd02cd0d3846">
