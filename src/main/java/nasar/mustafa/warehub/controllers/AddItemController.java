@@ -59,7 +59,7 @@ public class AddItemController {
             PreparedStatement command = connection.prepareStatement("INSERT INTO items(name) VALUES(?);");
             command.setString(1, ItemName.getText());
             command.executeUpdate();
-            command.cancel();
+//            command.cancel();
 
             ResultSet generatedKeys = command.getGeneratedKeys();
             if (!generatedKeys.next()) {
@@ -98,12 +98,6 @@ public class AddItemController {
                 throw new RuntimeException("Failed to rollback transaction: " + rollbackEx.getMessage(), rollbackEx);
             }
             throw new RuntimeException("Failed to execute transaction: " + e.getMessage(), e);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                throw new RuntimeException("Failed to restore auto-commit state: " + ex.getMessage(), ex);
-            }
         }
     }
 }

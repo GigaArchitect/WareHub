@@ -5,11 +5,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class PurchaseReportsController implements Initializable {
 
@@ -160,8 +164,53 @@ public class PurchaseReportsController implements Initializable {
     }
 
     @FXML
-    private void onExportReport() {
-        showAlert("تنبيه", "سيتم تنفيذ التصدير قريباً", Alert.AlertType.INFORMATION);
+    private void onExportPDF() {
+        if (purchasesTable.getItems().isEmpty()) {
+            showAlert("No purchase records to export", "The table is empty.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        File file = fileChooser.showSaveDialog(purchasesTable.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                JasperReport jasperReport = JasperCompileManager.compileReport(
+                        getClass().getResourceAsStream("/nasar/mustafa/warehub/Jasper/PurchaseReports.jrxml")
+                );
+
+                List<Map<String, Object>> dataList = new ArrayList<>();
+                for (PurchaseRecord record : purchasesTable.getItems()) {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("invoiceNumber", record.getInvoiceNumber());
+                    data.put("date", record.getDate());
+                    data.put("supplier", record.getSupplier());
+                    data.put("item", record.getItem());
+                    data.put("quantity", record.getQuantity());
+                    data.put("price", record.getPrice());
+                    data.put("total", record.getTotal());
+                    dataList.add(data);
+                }
+
+                JRDataSource dataSource = new JRBeanCollectionDataSource(dataList);
+
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("FromDate", fromDatePicker.getValue().toString());
+                parameters.put("ToDate", toDatePicker.getValue().toString());
+                parameters.put("TotalPurchase", totalPurchasesLabel.getText());
+
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+                JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+
+                showAlert("PDF Exported", "The purchase report has been successfully exported.", Alert.AlertType.INFORMATION);
+            } catch (JRException e) {
+                showAlert("Error Exporting PDF", "An error occurred while exporting the PDF: " + e.getMessage(), Alert.AlertType.ERROR);
+                e.printStackTrace();
+            }
+        }
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {

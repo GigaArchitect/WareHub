@@ -142,7 +142,6 @@ public class PurchaseOperationController implements Initializable {
 
                     connection.commit();
                     showAlert("Success", "Purchase saved successfully", Alert.AlertType.INFORMATION);
-                    clearForm();
                 }
             }
         } catch (SQLException e) {
@@ -241,14 +240,6 @@ public class PurchaseOperationController implements Initializable {
     private void clearItemInputs() {
         itemComboBox.setValue(null);
         quantityField.clear();
-    }
-
-    private void clearForm() {
-        supplierComboBox.setValue(null);
-        clearItemInputs();
-        purchaseItems.clear();
-        totalAmount = 0.0;
-        totalAmountLabel.setText(String.format("%,.2f", 0.0));
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {

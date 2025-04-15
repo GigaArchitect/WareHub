@@ -59,7 +59,7 @@
                      </font>
                   </Label>
                   <Button fx:id="printReportButton" mnemonicParsing="false" onAction="#onGenerateReport" text="تجميع التقرير" />
-                  <Button fx:id="exportButton" mnemonicParsing="false" onAction="#onExportReport" text="تصدير كملف PDF" />
+                  <Button fx:id="exportButton" mnemonicParsing="false" onAction="#onExportPDF" text="تصدير كملف PDF" />
                </children>
                <VBox.margin>
                   <Insets top="10.0" />
